@@ -19,6 +19,23 @@ body {
     min-height: 100vh;
 }
 
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    opacity: 0.8;
+    margin: 20px;
+}
+
+.navbar a {
+    color: #000000;
+    text-decoration: none; /* Enlève le soulignement */
+}
+
+.navbar a:hover {
+    color: gray;
+}
+
 h1 {
     font-size: 3rem;
     font-weight: 600;
@@ -41,7 +58,7 @@ h1 {
 }
 
 header, section, footer {
-    padding: 20px;
+    padding: 50px;
 }
 
 header {
@@ -75,62 +92,12 @@ section {
     transform: scale(1.1);
 }
 
-form {
-    display: grid;
-    grid-gap: 10px;
-}
-
-button {
-    padding: 10px;
-    background-color: gray;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: darkgray;
-}
-
 footer {
     background-color: transparent;
     color: black;
     text-align: center;
     margin-top: auto;
     padding: 10px;
-}
-
-#contact-form label {
-    display: block;
-}
-
-#contact-form {
-    display: grid;
-    grid-gap: 10px;
-    max-width: 400px; /* Ajustez la largeur maximale selon vos besoins */
-    margin: 0 auto; /* Centrez le formulaire horizontalement */
-}
-
-#contact-form input,
-#contact-form textarea {
-    width: 100%;
-    max-width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-#contact-form button {
-    padding: 10px;
-    background-color: darkgray;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-#contact-form button:hover {
-    background-color: gray;
 }
 
 .projects-section {
