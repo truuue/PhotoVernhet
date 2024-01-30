@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="fr" dir="ltr">
+  <head>
     <title>Connexion</title>
-    <link rel="stylesheet" type="text/css" href="../styles/LoginStyle.css">
-</head>
-<body>
-    <form action="traitement_login.php" method="post">
-        <h2>Connexion</h2>
-        <div>
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" required>
-        </div>
-        <div>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <button type="submit">Se connecter</button>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/LoginStyle.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/Logo.png') }}"
+      type="image/png"
+    />
+  </head>
+  <body>
+    {% with messages = get_flashed_messages(category_filter=["error"]) %} {% if
+    messages %}
+    <div class="error-messages">
+      {% for message in messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% endwith %}
+    <form action="{{ url_for('login') }}" method="post">
+      <h2>Connexion</h2>
+      {{ form.hidden_tag() }} {{ form.username.label }} {{ form.username() }} {{
+      form.password.label }} {{ form.password() }}
+      <input type="submit" value="Login" />
     </form>
-</body>
+  </body>
 </html>

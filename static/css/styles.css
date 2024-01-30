@@ -29,7 +29,8 @@ body {
 
 .navbar a {
     color: #000000;
-    text-decoration: none; /* Enlève le soulignement */
+    text-decoration: none;
+    /* Enlève le soulignement */
 }
 
 .navbar a:hover {
@@ -57,7 +58,9 @@ h1 {
     color: black;
 }
 
-header, section, footer {
+header,
+section,
+footer {
     padding: 50px;
 }
 
@@ -101,7 +104,8 @@ footer {
 }
 
 .projects-section {
-    margin-block-start: 2rem; /* Remplacé la variable --section-mt par une valeur */
+    margin-block-start: 2rem;
+    /* Remplacé la variable --section-mt par une valeur */
     padding: 4rem 1rem;
 }
 
@@ -142,7 +146,8 @@ footer {
     font-size: clamp(2rem, 3vw, 4rem);
     font-weight: 500;
     letter-spacing: 5px;
-    color: black; /* Remplacé la variable --other-clr par une couleur */
+    color: black;
+    /* Remplacé la variable --other-clr par une couleur */
 }
 
 .project h2 {

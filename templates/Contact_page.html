@@ -1,47 +1,69 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Contact_style.css') }}" />
-    <link rel="icon" href="{{ url_for('static', filename='images/Logo.png') }}" type="image/png" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/Contact_style.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/Logo.png') }}"
+      type="image/png"
+    />
     <title>Photo VERNHET</title>
-<head>
-    <title>Contact</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="navbar">
-        <a href="/" target="_self">Accueil</a>
-        <a href="/school" target="_self">Scolaires</a>
+      <a href="/" target="_self">Accueil</a>
+      <a href="/school" target="_self">Scolaires</a>
     </div>
     <h1>Bienvenue sur nôtre page de contact !</h1>
     <p>Pour nous contacter tout ce passe ici !</p>
     <form id="form" action="votre_script_de_traitement" method="post">
-        <label for="name">Nom :</label>
-        <input type="text" id="name" name="name" required>
-    
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" required>
-    
-        <label for="message">Message :</label>
-        <textarea id="message" name="message" required></textarea>
-    
-        <button type="submit">Envoyer</button>
-        <p id="confirmationMessage" style="display:none;">Merci pour votre message ! Nous vous contacterons bientôt.</p>
+      <label for="name">Nom :</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email :</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="message">Message :</label>
+      <textarea id="message" name="message" required></textarea>
+
+      <button type="submit">Envoyer</button>
+      <p id="confirmationMessage" style="display: none">
+        Merci pour votre message ! Nous vous contacterons bientôt.
+      </p>
     </form>
-</body>
-<footer>
+  </body>
+  <footer>
     <p>Nos réseaux sociaux !</p>
     <div id="social">
-        <a href="https://www.facebook.com/p/PHOTO-VERNHET-100063586840534/" target="_blank">
-          <img class="social_icons" src="../images/icons8-facebook-100.png" alt="Facebook" />
-        </a>
-        <a href="https://www.instagram.com/photovernhet/" target="_blank">
-          <img class="social_icons" src="../images/icons8-instagram-100.png" alt="Instagram" />
-        </a>
-        <a href="https://twitter.com/photovernhet" target="_blank">
-          <img class="social_icons" src="../images/icons8-twitter-100.png" alt="Twitter" />
-        </a>
+      <a
+        href="https://www.facebook.com/p/PHOTO-VERNHET-100063586840534/"
+        target="_blank"
+      >
+        <img
+          class="social_icons"
+          src="{{ url_for('static', filename='images/icons8-facebook-100.png') }}"
+          alt="Facebook"
+        />
+      </a>
+      <a href="https://www.instagram.com/photovernhet/" target="_blank">
+        <img
+          class="social_icons"
+          src="{{ url_for('static', filename='images/icons8-instagram-100.png') }}"
+          alt="Instagram"
+        />
+      </a>
+      <a href="https://twitter.com/photovernhet" target="_blank">
+        <img
+          class="social_icons"
+          src="{{ url_for('static', filename='images/icons8-twitter-100.png') }}"
+          alt="Twitter"
+        />
+      </a>
     </div>
-</footer>
+  </footer>
 </html>
