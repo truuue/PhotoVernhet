@@ -28,7 +28,7 @@ Tanks to my peers for contributing
 
 ## Feedback
 
-If you have any feedback, please reach out to us at fake@fake.com
+If you have any feedback, please reach out to me at noah.vernhetpro@gmail.com
 
 
 ## 🚀 About Me
