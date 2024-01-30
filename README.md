@@ -20,7 +20,7 @@ This project is used by the following companies:
 Tanks to my peers for contributing
 <ul>
   <li><a href="https://github.com/hug0-cstrs">Hugo Castéras</a></li>
-  <li><a href="">Valentin Melia</a></li>
+  <li><a href="https://github.com/Vaal34">Valentin Melia</a></li>
   <li><a href="https://github.com/fchavonet">Fabien Chavonet</a></li>
   <li><a href="https://github.com/SpStigma">Yoann Rivet</a></li>
 </ul>
