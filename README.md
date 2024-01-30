@@ -32,4 +32,4 @@ If you have any feedback, please reach out to me at noah.vernhetpro@gmail.com
 
 
 ## 🚀 About Me
-[Mon readme](https://github.com/truuue/truuue/blob/master/README.md)
+[My personal readme](https://github.com/truuue/truuue/blob/master/README.md)
