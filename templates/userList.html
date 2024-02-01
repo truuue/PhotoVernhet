@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Liste des Utilisateurs</title>
+    <title>Administration</title>
   </head>
   <body>
-    <h1>Utilisateurs</h1>
+    <h1>Page d'Administration</h1>
+
+    {% for user in users %}
+        <form action="{{ url_for('admin') }}" method="post">
+            <input type="hidden" name="user_id" value="{{ user.id }}">
+            <p>{{ user.username }} - Role actuel: {{ user.role }}</p>
+            <select name="role">
+                <option value="user">Utilisateur</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Mettre à jour</button>
+        </form>
+    {% endfor %}
+
+    <h2>Liste des utilisateurs</h2>
     <ul>
       {% for user in users %}
       <li>{{ user.username }} - {{ user.email }}</li>
