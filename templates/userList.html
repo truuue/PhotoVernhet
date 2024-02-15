@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr" dir="ltr">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/userList.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/Logo.png') }}"
+      type="image/png"
+    />
     <title>Administration</title>
   </head>
+
   <body>
     <h1>Page d'Administration</h1>
 
     {% for user in users %}
-        <form action="{{ url_for('admin') }}" method="post">
-            <input type="hidden" name="user_id" value="{{ user.id }}">
-            <p>{{ user.username }} - Role actuel: {{ user.role }}</p>
-            <select name="role">
-                <option value="user">Utilisateur</option>
-                <option value="admin">Admin</option>
-            </select>
-            <button type="submit">Mettre à jour</button>
-        </form>
+    <form action="{{ url_for('admin') }}" method="post">
+      <input type="hidden" name="user_id" value="{{ user.id }}" />
+      <p class="role-display">{{ user.username }} - Role actuel: {{ user.role }}</p>
+      <select name="role" class="role-select">
+        <option value="user">Utilisateur</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button type="submit" class="update-button">Mettre à jour</button>
+    </form>
     {% endfor %}
 
     <h2>Liste des utilisateurs</h2>
