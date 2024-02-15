@@ -188,6 +188,10 @@ def password_check():
             <input type="submit" value="Vérifier">
         </form>
     ''')
+# Mettre en place une redirection automatique vers l'école du mot de passe désigné
+# du style : /password-check?redirect=school
+# motdepasse redigige vers saint joseph
+# motdepasse2 redirige vers la sup
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
