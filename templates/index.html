@@ -24,11 +24,16 @@
       <nav>
         <div class="navigation">
           <ul class="nav-items">
+            {% if not current_user.is_authenticated %}
             <li><a href="/register">Enregistrement</a></li>
             <li><a href="/login">Connexion</a></li>
-            {% if current_user.is_authenticated %}
+            {% endif %} {% if current_user.is_authenticated %}
             <li><a href="/profil">Profil</a></li>
+            <li><a href="/album">Albums</a></li>
             <li><a href="/logout">Déconnexion</a></li>
+            {% endif %} {% if current_user.is_authenticated and
+            current_user.is_admin %}
+            <li><a href="/admin">Page administrateur</a></li>
             {% endif %}
           </ul>
           <div class="nav-toogler">
@@ -39,6 +44,10 @@
         </div>
       </nav>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %} {% endif %} {% endwith %}
 
     <header>
       <p class="headerPP">PHOTOGRAPHE PROFESSIONNEL</p>

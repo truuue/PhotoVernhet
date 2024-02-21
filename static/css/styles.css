@@ -84,6 +84,7 @@ body {
 
 .nav-items li {
     list-style: none;
+    text-align: center;
 }
 
 .nav-items li a {
@@ -96,6 +97,12 @@ body {
 .nav-items li a:hover {
     color: gray;
     transition: color 0.3s ease;
+}
+
+.alert {
+    padding: 2rem;
+    color: black;
+    text-align: center;
 }
 
 h1 {
