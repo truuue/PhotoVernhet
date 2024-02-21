@@ -54,7 +54,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[InputRequired()])
 
 # Formulaire Flask-WTF pour la mise à jour du profil
-class ProfileForm(FlaskForm):
+class ProfilForm(FlaskForm):
     username = StringField('Nom d\'utilisateur', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Mot de passe', validators=[Optional(), Length(min=6)])
@@ -63,7 +63,10 @@ class ProfileForm(FlaskForm):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    user = User.query.get(int(user_id))
+    if user:
+        return user
+    return None
 
 @app.route('/')
 def home():
@@ -88,7 +91,7 @@ def login():
             if user.role == 'admin':
                 return redirect(url_for('admin'))
             else:
-                return redirect(url_for('profile'))
+                return redirect(url_for('profil'))
         else:
             flash('Nom d\'utilisateur ou mot de passe incorrect.', 'error')
     return render_template('Login.html', form=form)
@@ -127,10 +130,10 @@ def register():
 def school():
     return render_template('School_page.html')
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/profil', methods=['GET', 'POST'])
 @login_required
-def profile():
-    form = ProfileForm(obj=current_user)  # Initialisez le formulaire avec les données actuelles
+def profil():
+    form = ProfilForm(obj=current_user)  # Initialisez le formulaire avec les données actuelles
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -140,8 +143,40 @@ def profile():
         db.session.commit()
         login_user(current_user)
         flash('Votre profil a été mis à jour.', 'success')
-        return redirect(url_for('profile'))
-    return render_template('profile.html', form=form)
+        return redirect(url_for('profil'))
+    return render_template('profil.html', form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route('/delete_user', methods=['POST'])
+@login_required
+def delete_user():
+    user_id = current_user.id
+    user_to_delete = db.session.get(User, user_id)
+    if user_to_delete:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+
+    logout_user()
+    flash('Votre compte a été supprimé.', 'success')
+    return redirect('/')
+
+@app.route('/delete_user_admin', methods=['POST'])
+def delete_user_admin():
+    user_id = request.form.get('user_id')
+    user_to_delete = User.query.get(user_id)
+    if user_to_delete:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash('Le compte a été supprimé.', 'success')
+    else:
+        flash('Utilisateur introuvable.', 'error')
+
+    return redirect('/admin')
 
 def admin_required(f):
     @wraps(f)
@@ -153,7 +188,7 @@ def admin_required(f):
     return decorated_function
 
 @app.route('/admin', methods=['GET', 'POST'])
-@admin_required
+
 def admin():
     if request.method == 'POST':
         user_id = request.form['user_id']
