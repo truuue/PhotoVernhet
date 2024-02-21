@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/profil.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/Logo.png') }}"
+      type="image/png"
+    />
+    <title>Profil</title>
+  </head>
+  <body>
+    {% if current_user.is_authenticated %}
+    <div class="navbar">
+      <a href="/" target="_self">Accueil</a>
+      <a href="/contact" target="_self">Contact</a>
+    </div>
+    <div class="form-container">
+      <form class="info" action="{{ url_for('profil') }}" method="post">
+        {{ form.hidden_tag() }}
+        <h1>Modifier le Profil</h1>
+
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          type="username"
+          id="username"
+          name="username"
+          value="{{ current_user.username }}"
+          required
+        />
+
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="{{ current_user.email }}"
+          required
+        />
+
+        <label for="password"
+          >Nouveau mot de passe (laisser vide pour ne pas changer)</label
+        >
+        <input type="password" id="password" name="password" />
+
+        <label for="confirm_password">Confirmer le mot de passe</label>
+        <input type="password" id="confirm_password" name="confirm_password" />
+
+        <button type="submit">Mettre à jour</button>
+      </form>
+      <form class="delete-account-form" action="{{ url_for('delete_user') }}" method="post">
+        <input type="submit" value="Supprimer mon compte" />
+      </form>
+    </div>
+    {% else %}
+    <p>Vous devez être connecté pour voir cette page</p>
+    <a href="/login">Connexion</a>
+    {% endif %}
+  </body>
+</html>
