@@ -27,7 +27,6 @@ label {
 
 input[type="text"],
 input[type="password"],
-input[type="email"], 
 button {
     width: 100%;
     padding: 10px;
@@ -51,15 +50,22 @@ button {
     background-color: #333;
 }
 
+.alert {
+    padding: 2rem;
+    color: red;
+    text-align: center;
+}
+
 /* Mobile styles */
 @media only screen and (max-width: 600px) {
+
     input[type="text"],
     input[type="password"],
-    input[type="email"], 
     button {
         width: 100%;
         box-sizing: border-box;
     }
+
     form {
         padding: 30px;
     }
@@ -73,11 +79,8 @@ button {
     }
 }
 
-label, input, button {
+label,
+input,
+button {
     font-size: 1rem;
-}
-
-.error-messages {
-    color: red;
-    margin-bottom: 20px;
 }

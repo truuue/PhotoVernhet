@@ -22,14 +22,10 @@
         {{ form.password.label }} {{ form.password() }}
         <input class="login" type="submit" value="Login" />
       </form>
-      {% with messages = get_flashed_messages(category_filter=["error"]) %} {%
-      if messages %}
-      <div class="error-messages">
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-      {% endif %} {% endwith %}
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
     </div>
   </body>
 </html>
