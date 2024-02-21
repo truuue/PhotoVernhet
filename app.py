@@ -88,10 +88,11 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
+            session['user_role'] = user.role
             if user.role == 'admin':
                 return redirect(url_for('admin'))
             else:
-                return redirect(url_for('profil'))
+                return redirect(url_for('home'))
         else:
             flash('Nom d\'utilisateur ou mot de passe incorrect.', 'error')
     return render_template('Login.html', form=form)
@@ -150,6 +151,8 @@ def profil():
 @login_required
 def logout():
     logout_user()
+    session.clear()
+    flash('Vous avez été déconnecté avec succès.', 'success')
     return redirect(url_for('home'))
 
 @app.route('/delete_user', methods=['POST'])
@@ -162,7 +165,7 @@ def delete_user():
         db.session.commit()
 
     logout_user()
-    flash('Votre compte a été supprimé.', 'success')
+    flash('Votre compte a été supprimé avec succès.', 'success')
     return redirect('/')
 
 @app.route('/delete_user_admin', methods=['POST'])
@@ -181,14 +184,14 @@ def delete_user_admin():
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_role' not in session or session['user_role'] == 'admin':
+        if 'user_role' not in session or session['user_role'] != 'admin':
             flash("Vous devez être administrateur pour accéder à cette page.", "warning")
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
 
 @app.route('/admin', methods=['GET', 'POST'])
-
+@admin_required
 def admin():
     if request.method == 'POST':
         user_id = request.form['user_id']
