@@ -26,7 +26,10 @@
           <ul class="nav-items">
             <li><a href="/register">Enregistrement</a></li>
             <li><a href="/login">Connexion</a></li>
-            <li><a href="/profile">Profil</a></li>
+            {% if current_user.is_authenticated %}
+            <li><a href="/profil">Profil</a></li>
+            <li><a href="/logout">Déconnexion</a></li>
+            {% endif %}
           </ul>
           <div class="nav-toogler">
             <span></span>
