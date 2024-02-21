@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/albumSelection.css') }}"
+    />
     <title>Album Selection</title>
   </head>
   <body>
+    {% if current_user.is_authenticated %}
     <h1>Album Selection</h1>
     <p>
       Welcome to our album selection page. Please choose the album you would
@@ -21,5 +26,14 @@
     <div>
       <a href="">Album 3</a>
     </div>
+    {% else %}
+    <div class="request">
+      <p class="error-message">Vous devez être connecté pour voir cette page</p>
+      <ul>
+        <li><a href="/register">Enregistrement</a></li>
+        <li><a href="/login">Connexion</a></li>
+      </ul>
+    </div>
+    {% endif %}
   </body>
 </html>
