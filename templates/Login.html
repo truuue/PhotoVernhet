@@ -15,19 +15,21 @@
     />
   </head>
   <body>
-    {% with messages = get_flashed_messages(category_filter=["error"]) %} {% if
-    messages %}
-    <div class="error-messages">
-      {% for message in messages %}
-      <p>{{ message }}</p>
-      {% endfor %}
+    <div class="form-container">
+      <form action="{{ url_for('login') }}" method="post">
+        <h2>Connexion</h2>
+        {{ form.hidden_tag() }} {{ form.username.label }} {{ form.username() }}
+        {{ form.password.label }} {{ form.password() }}
+        <input class="login" type="submit" value="Login" />
+      </form>
+      {% with messages = get_flashed_messages(category_filter=["error"]) %} {%
+      if messages %}
+      <div class="error-messages">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
     </div>
-    {% endif %} {% endwith %}
-    <form action="{{ url_for('login') }}" method="post">
-      <h2>Connexion</h2>
-      {{ form.hidden_tag() }} {{ form.username.label }} {{ form.username() }} {{
-      form.password.label }} {{ form.password() }}
-      <input type="submit" value="Login" />
-    </form>
   </body>
 </html>
