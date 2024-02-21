@@ -11,6 +11,23 @@ html {
     scroll-behavior: smooth;
 }
 
+.navbar {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #f2f2f2;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
 h1 {
     text-align: center;
     margin: 50px 0 50px 0;
@@ -19,6 +36,14 @@ h1 {
     letter-spacing: 5px;
     color: black;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 form {
@@ -83,4 +108,20 @@ ul {
 li {
     margin: 8px 0;
     color: black;
+}
+
+@media (max-width: 650px) {
+    h1 {
+        text-align: center;
+        margin: 50px 0 50px 0;
+        font-size: 2.5rem;
+        font-weight: 500;
+        letter-spacing: 5px;
+        color: black;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container {
+        flex-direction: column;
+    }
 }

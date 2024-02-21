@@ -16,18 +16,29 @@
   </head>
 
   <body>
+    <div class="navbar">
+      <a href="/" target="_self">Accueil</a>
+    </div>
     <h1>Page d'Administration</h1>
 
     {% for user in users %}
-    <form action="{{ url_for('admin') }}" method="post">
-      <input type="hidden" name="user_id" value="{{ user.id }}" />
-      <p class="role-display">{{ user.username }} - Role actuel: {{ user.role }}</p>
-      <select name="role" class="role-select">
-        <option value="user">Utilisateur</option>
-        <option value="admin">Admin</option>
-      </select>
-      <button type="submit" class="update-button">Mettre à jour</button>
-    </form>
+    <div class="form-container">
+      <form action="{{ url_for('admin') }}" method="post">
+        <input type="hidden" name="user_id" value="{{ user.id }}" />
+        <p class="role-display">
+          {{ user.username }} - Role actuel: {{ user.role }}
+        </p>
+        <select name="role" class="role-select">
+          <option value="user">Utilisateur</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button type="submit" class="update-button">Mettre à jour</button>
+      </form>
+      <form action="{{ url_for('delete_user_admin') }}" method="post">
+        <input type="hidden" name="user_id" value="{{ user.id }}" />
+        <input type="submit" value="Supprimer le compte" />
+      </form>
+    </div>
     {% endfor %}
 
     <h2>Liste des utilisateurs</h2>
