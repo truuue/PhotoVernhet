@@ -10,6 +10,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, Optional
 from werkzeug.security import generate_password_hash, check_password_hash
+from webdav3.client import Client
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -97,9 +98,58 @@ def login():
             flash('Nom d\'utilisateur ou mot de passe incorrect.', 'error')
     return render_template('Login.html', form=form)
 
+def get_folders():
+    url = os.getenv('SYNOLOGY_URL')
+    username = os.getenv('SYNOLOGY_USERNAME')
+    password = os.getenv('SYNOLOGY_PASSWORD')
+
+    options = {
+        'webdav_hostname': url,
+        'webdav_login': username,
+        'webdav_password': password
+    }
+    client = Client(options)
+
+    remote_path = '/photo'
+    folders = client.list(remote_path)
+    return folders
+
 @app.route('/album')
+@login_required
 def album():
-    return render_template('albumSelection.html')
+    # Récupérer les albums depuis le serveur synology
+    folders = get_folders()
+    return render_template('albumSelection.html', folders=folders)
+
+@app.route('/view_album')
+@login_required
+def view_album():
+    folder_name = request.args.get('folder')
+    if not folder_name:
+        return "No folder specified", 400
+
+    client = Client({
+        'webdav_hostname': os.getenv('SYNOLOGY_URL'),
+        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
+        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
+    })
+
+    remote_path = f'/photo/{folder_name}'
+    images = client.list(remote_path)
+    image_urls = [url_for('get_image', folder=folder_name, image=image) for image in images]
+    return render_template('albumView.html', images=image_urls)
+
+@app.route('/get_image/<folder>/<image>')
+def get_image(folder, image):
+    client = Client({
+        'webdav_hostname': os.getenv('SYNOLOGY_URL'),
+        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
+        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
+    })
+
+    remote_path = f'/photo/{folder}/{image}'
+    image_content = client.download_sync(remote_path=remote_path)
+    return send_file(io.BytesIO(image_content), mimetype='image/jpeg')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
