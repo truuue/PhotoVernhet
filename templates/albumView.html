@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue de l'Album</title>
+  </head>
+  <body>
+    <h1>Images de l'Album</h1>
+    <div>
+      {% for image_url in images %}
+      <img src="{{ image_url }}" alt="Image de l'album" />
+      {% endfor %}
+    </div>
+  </body>
+</html>

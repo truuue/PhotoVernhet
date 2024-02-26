@@ -7,24 +7,23 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/albumSelection.css') }}"
     />
-    <title>Album Selection</title>
+    <title>Album</title>
   </head>
   <body>
     {% if current_user.is_authenticated %}
-    <h1>Album Selection</h1>
+    <h1>Selection d'album</h1>
     <p>
-      Welcome to our album selection page. Please choose the album you would
-      like to view:
+      Bienvenue sur notre page de sélection d'album. Veuillez entrer le mot de
+      passe de l'album que vous souhaitez voir :
     </p>
-
+    <form method="POST" action="/album">
+      <input type="text" name="access_code" placeholder="Mot de passe" />
+      <button type="submit">Vérifier</button>
+    </form>
     <div>
-      <a href="">Album 1</a>
-    </div>
-    <div>
-      <a href="">Album 2</a>
-    </div>
-    <div>
-      <a href="">Album 3</a>
+      {% for folder in folders %}
+      <a href="/view_album?folder={{ folder }}">{{ folder }}</a>
+      {% endfor %}
     </div>
     {% else %}
     <div class="request">
