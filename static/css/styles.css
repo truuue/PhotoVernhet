@@ -142,25 +142,63 @@ section {
     margin: 20px 0;
 }
 
-.gallery {
+.carousel {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
+    perspective: 1000px;
+    position: relative;
+    /* Ajouté pour positionner les boutons par rapport au carousel */
 }
 
-.photo {
-    margin: 10px;
+.carousel-image {
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+    display: block;
+    transition: transform 0.5s ease;
+    transform: scale(0.8);
+    opacity: 0.5;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
 }
 
-.photo img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
+.carousel-image.active {
+    transform: scale(1) translateZ(100px);
+    opacity: 1;
+    border-radius: 10px;
+}
+
+.prevButton,
+.nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    /* S'assure que les boutons sont au-dessus des images */
+}
+
+.prevButton {
+    left: 10px;
+}
+
+.nextButton {
+    right: 10px;
+}
+
+.link-button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
     border-radius: 5px;
-    transition: transform 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 30px;
+    transition: background-color 0.3s ease;
 }
 
-.photo img:hover {
-    transform: scale(1.1);
+.link-button:hover {
+    background-color: gray;
 }
 
 footer {

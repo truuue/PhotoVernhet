@@ -16,6 +16,10 @@
       src="{{ url_for('static', filename='js/burgerMenu.js') }}"
       defer
     ></script>
+    <script
+      src="{{ url_for('static', filename='js/carousel.js') }}"
+      defer
+    ></script>
     <title>Photo VERNHET</title>
   </head>
 
@@ -43,6 +47,7 @@
           </div>
         </div>
       </nav>
+      <!-- refaire la gestion des flash -->
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %}
@@ -70,11 +75,35 @@
               rel="noreferrer"
               class="project-img"
             >
-              <img src="" alt="Photo scolaires" title="Scolaires/pics" />
+              <div class="carousel">
+                <img
+                  src="../static/images/Scolaire/Portrait_N.jpg"
+                  class="carousel-image"
+                  alt="Photo scolaires"
+                  title="Scolaires"
+                />
+                <img
+                  src="../static/images/Scolaire/Portrait_N.jpg"
+                  class="carousel-image"
+                  alt="Photo scolaires"
+                  title="Scolaires"
+                />
+                <img
+                  src="../static/images/Scolaire/Portrait_N.jpg"
+                  class="carousel-image"
+                  alt="Photo scolaires"
+                  title="Scolaires"
+                />
+              </div>
+              <button class="prevButton">Précédent</button>
+              <button class="nextButton">Suivant</button>
             </a>
             <div>
               <h2>Scolaires</h2>
               <p>Pour le sourire des plus petits...</p>
+              <a href="/password-check">
+                <button class="link-button">Clique</button>
+              </a>
             </div>
           </article>
 
@@ -145,8 +174,17 @@
               rel="noreferrer"
               class="project-img"
             >
-              <img src="" alt="Photo animalière" title="Animaux" />
+              <div class="imageCarousel carousel">
+                <img
+                  src=""
+                  class="carousel-image"
+                  alt="Photo animalière"
+                  title="Animaux"
+                />
+              </div>
             </a>
+            <button id="prevButton">Précédent</button>
+            <button id="nextButton">Suivant</button>
             <div>
               <h2>Animaux</h2>
               <p>Pour nos 30 millions d'amis...</p>
