@@ -73,6 +73,10 @@ def load_user(user_id):
 def home():
     return render_template('index.html')
 
+@app.route('/test')
+def test():
+    return render_template('testCarousel.html')
+
 @app.route('/contact')
 def contact():
     return render_template('Contact_page.html')
