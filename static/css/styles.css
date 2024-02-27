@@ -144,13 +144,13 @@ section {
 .link-button {
     background-color: black;
     color: white;
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    margin-top: 30px;
+    margin: 2rem 0;
     transition: background-color 0.3s ease;
 }
 
@@ -182,7 +182,6 @@ footer {
 }
 
 .project h2 {
-    padding-block-start: clamp(1.5rem, 2vw, 3rem);
     font-size: clamp(2.5rem, 3vw, 4rem);
 }
 
