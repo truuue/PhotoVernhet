@@ -4,7 +4,6 @@
 *::before,
 *::after {
     font-family: 'Poppins', sans-serif;
-    margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
@@ -49,22 +48,21 @@ body {
     transition: all 0.3s linear;
 }
 
-/* Transformation des barres du menu burger en croix lors de l'activation */
-.nav-wrapper.active .nav-toogler span:nth-child(1) {
+#nav-wrapper.active .nav-toogler span:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
     background-color: white;
 }
 
-.nav-wrapper.active .nav-toogler span:nth-child(2) {
+#nav-wrapper.active .nav-toogler span:nth-child(2) {
     opacity: 0;
 }
 
-.nav-wrapper.active .nav-toogler span:nth-child(3) {
+#nav-wrapper.active .nav-toogler span:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -6px);
     background-color: white;
 }
 
-.nav-wrapper {
+#nav-wrapper {
     position: fixed;
     top: 0;
     right: -100%;
@@ -78,8 +76,9 @@ body {
     transition: right 0.3s ease;
 }
 
-.nav-wrapper.active {
+#nav-wrapper.active {
     right: 0;
+    z-index: 10;
 }
 
 .nav-items li {
@@ -105,7 +104,7 @@ body {
     text-align: center;
 }
 
-h1 {
+header h1 {
     font-size: 3rem;
     font-weight: 600;
     letter-spacing: 5px;
@@ -113,14 +112,14 @@ h1 {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.h2P {
+header h2 {
     font-size: 1.5rem;
     font-weight: 400;
     letter-spacing: 5px;
     color: black;
 }
 
-.headerPP {
+#header-pretitle {
     font-weight: 400;
     letter-spacing: 4px;
     color: black;
@@ -140,48 +139,6 @@ header {
 
 section {
     margin: 20px 0;
-}
-
-.carousel {
-    display: flex;
-    justify-content: center;
-    perspective: 1000px;
-    position: relative;
-    /* Ajouté pour positionner les boutons par rapport au carousel */
-}
-
-.carousel-image {
-    flex: 0 0 33.33%;
-    max-width: 33.33%;
-    display: block;
-    transition: transform 0.5s ease;
-    transform: scale(0.8);
-    opacity: 0.5;
-    border-radius: 10px;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
-}
-
-.carousel-image.active {
-    transform: scale(1) translateZ(100px);
-    opacity: 1;
-    border-radius: 10px;
-}
-
-.prevButton,
-.nextButton {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-    /* S'assure que les boutons sont au-dessus des images */
-}
-
-.prevButton {
-    left: 10px;
-}
-
-.nextButton {
-    right: 10px;
 }
 
 .link-button {
@@ -209,14 +166,9 @@ footer {
     padding: 10px;
 }
 
-.projects-section {
-    margin-block-start: 2rem;
-    /* Remplacé la variable --section-mt par une valeur */
-    padding: 4rem 1rem;
-}
-
 .projects {
     padding-block-start: 5rem;
+    margin-block-start: 2rem;
     display: flex;
     flex-direction: column;
     gap: 12rem;
@@ -229,33 +181,6 @@ footer {
     gap: 5rem;
 }
 
-.project-img {
-    transition: opacity 300ms ease-in-out;
-    position: relative;
-    display: inline-block;
-    height: 100%;
-}
-
-.project-img:hover {
-    opacity: 0.9;
-}
-
-.project:nth-child(even) a {
-    order: 2;
-}
-
-.project:nth-child(even) div {
-    order: 1;
-}
-
-.project h3 {
-    font-size: clamp(2rem, 3vw, 4rem);
-    font-weight: 500;
-    letter-spacing: 5px;
-    color: black;
-    /* Remplacé la variable --other-clr par une couleur */
-}
-
 .project h2 {
     padding-block-start: clamp(1.5rem, 2vw, 3rem);
     font-size: clamp(2.5rem, 3vw, 4rem);
@@ -264,4 +189,65 @@ footer {
 .project p {
     padding-block-start: 1.5rem;
     max-width: 500px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+.carousel-container {
+    width: 100%;
+    max-width: 800px;
+    max-height: 600px;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.carousel-pictures {
+    position: relative;
+    height: 100%;
+}
+
+.carousel-pic {
+    position: absolute;
+    width: 60%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    cursor: pointer;
+    opacity: 0.4;
+}
+
+.carousel-container img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 0 4px black;
+}
+
+.carousel-pic.center {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 2;
+}
+
+.carousel-pic.left {
+    z-index: 1;
+    transform: translateX(-50%) scale(0.8);
+}
+
+.carousel-pic.right {
+    z-index: 1;
+    transform: translateX(50%) scale(0.8);
+}
+
+.project:nth-child(even) div.carousel-container {
+    order: 2;
+}
+
+.project:nth-child(even) div {
+    order: 1;
 }

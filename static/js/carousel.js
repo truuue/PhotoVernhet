@@ -1,34 +1,46 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const carousels = document.querySelectorAll(".carousel");
+document.addEventListener("DOMContentLoaded", function () {
+  // Sélectionner tous les conteneurs de carrousel
+  const carousels = document.querySelectorAll(".carousel-container");
 
   carousels.forEach((carousel) => {
-    const images = carousel.querySelectorAll(".carousel-image");
-    let currentImageIndex = 1;
+    // Initialiser chaque carrousel avec une image par défaut au centre
+    setDefaultImagePosition(carousel);
 
-    if (images.length > 1) {
-      images[1].classList.add("active");
-    }
+    // Écouter les clics sur les images de chaque carrousel
+    const pics = carousel.querySelectorAll(".carousel-pic");
+    pics.forEach((pic, index) => {
+      pic.addEventListener("click", function () {
+        if (pic.classList.contains("center")) return; // Ignorer si déjà au centre
 
-    const nextButton = carousel.nextElementSibling;
-    const prevButton = nextButton.nextElementSibling;
+        // Réinitialiser les classes pour tous les pics
+        pics.forEach((p) => p.classList.remove("left", "center", "right"));
 
-    nextButton.addEventListener("click", () => {
-      currentImageIndex = (currentImageIndex + 1) % images.length;
-      updateCarousel();
-    });
+        // Image cliquée au centre
+        pic.classList.add("center");
 
-    prevButton.addEventListener("click", () => {
-      currentImageIndex =
-        (currentImageIndex - 1 + images.length) % images.length;
-      updateCarousel();
-    });
+        // Calculer et ajuster les positions des images restantes
+        const leftIndex = (index + pics.length - 1) % pics.length;
+        const rightIndex = (index + 1) % pics.length;
 
-    const updateCarousel = () => {
-      images.forEach((img, index) => {
-        img.classList.remove("active"); // Retirer la classe 'active' de toutes les images
-        img.style.transform = `translateX(-${100 * currentImageIndex}%)`;
+        pics[leftIndex].classList.add("left");
+        pics[rightIndex].classList.add("right");
       });
-      images[currentImageIndex].classList.add("active"); // Ajouter la classe 'active' à l'image courante
-    };
+    });
   });
 });
+
+function setDefaultImagePosition(carousel) {
+  const pics = carousel.querySelectorAll(".carousel-pic");
+  const randomIndex = Math.floor(Math.random() * pics.length);
+
+  pics.forEach((pic, index) => {
+    pic.classList.remove("left", "center", "right");
+    if (index === randomIndex) {
+      pic.classList.add("center");
+    } else if ((randomIndex + 1) % pics.length === index) {
+      pic.classList.add("right");
+    } else {
+      pic.classList.add("left");
+    }
+  });
+}

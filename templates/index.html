@@ -24,204 +24,325 @@
   </head>
 
   <body>
-    <div class="nav-wrapper">
+    <div id="nav-wrapper">
       <nav>
-        <div class="navigation">
-          <ul class="nav-items">
-            {% if not current_user.is_authenticated %}
-            <li><a href="/register">Enregistrement</a></li>
-            <li><a href="/login">Connexion</a></li>
-            {% endif %} {% if current_user.is_authenticated %}
-            <li><a href="/profil">Profil</a></li>
-            <li><a href="/album">Albums</a></li>
-            <li><a href="/logout">Déconnexion</a></li>
-            {% endif %} {% if current_user.is_authenticated and
-            current_user.is_admin %}
-            <li><a href="/admin">Page administrateur</a></li>
-            {% endif %}
-          </ul>
-          <div class="nav-toogler">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+        <ul class="nav-items">
+          {% if not current_user.is_authenticated %}
+          <li><a href="/register">Enregistrement</a></li>
+          <li><a href="/login">Connexion</a></li>
+          {% endif %} {% if current_user.is_authenticated %}
+          <li><a href="/profil">Profil</a></li>
+          <li><a href="/album">Albums</a></li>
+          <li><a href="/logout">Déconnexion</a></li>
+          {% endif %} {% if current_user.is_authenticated and
+          current_user.is_admin %}
+          <li><a href="/admin">Page administrateur</a></li>
+          {% endif %}
+        </ul>
+        <div class="nav-toogler">
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
       </nav>
-      <!-- refaire la gestion des flash -->
     </div>
+    <!-- refaire la gestion des flash -->
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %}
     <div class="alert">{{ message }}</div>
     {% endfor %} {% endif %} {% endwith %}
 
     <header>
-      <p class="headerPP">PHOTOGRAPHE PROFESSIONNEL</p>
+      <p id="header-pretitle">PHOTOGRAPHE PROFESSIONNEL</p>
       <br />
       <h1>Photo VERNHET</h1>
       <br />
-      <h2 class="h2P">50 Ans de photo</h2>
+      <h2>50 Ans de photo</h2>
       <p>
         Portrait - Mariage - Grossesse - Bébé - Famille et bien plus encore...
       </p>
     </header>
 
-    <section class="projects-section" id="projects">
-      <div class="container">
-        <section class="projects">
-          <article class="project">
-            <a
-              href="/password-check"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <div class="carousel">
-                <img
-                  src="../static/images/Scolaire/Portrait_N.jpg"
-                  class="carousel-image"
-                  alt="Photo scolaires"
-                  title="Scolaires"
-                />
-                <img
-                  src="../static/images/Scolaire/Portrait_N.jpg"
-                  class="carousel-image"
-                  alt="Photo scolaires"
-                  title="Scolaires"
-                />
-                <img
-                  src="../static/images/Scolaire/Portrait_N.jpg"
-                  class="carousel-image"
-                  alt="Photo scolaires"
-                  title="Scolaires"
-                />
-              </div>
-              <button class="prevButton">Précédent</button>
-              <button class="nextButton">Suivant</button>
-            </a>
-            <div>
-              <h2>Scolaires</h2>
-              <p>Pour le sourire des plus petits...</p>
-              <a href="/password-check">
-                <button class="link-button">Clique</button>
-              </a>
-            </div>
-          </article>
+    <section class="projects">
+      <article class="project">
+        <div class="carousel-container" id="carousel-1">
+          <input type="radio" name="slider1" id="item-1-1" />
+          <input type="radio" name="slider1" id="item-1-2" />
+          <input type="radio" name="slider1" id="item-1-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-1-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-1-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-1-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Scolaires</h2>
+          <p>Pour le sourire des plus petits...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">S'y rendre</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <img src="" alt="Photo Mariage" title="Mariage/pics" />
-            </a>
-            <div>
-              <h2>Mariage</h2>
-              <p>Pour un amour éternel...</p>
-            </div>
-          </article>
+      <article class="project">
+        <div class="carousel-container" id="carousel-2">
+          <input type="radio" name="slider2" id="item-2-1" />
+          <input type="radio" name="slider2" id="item-2-2" />
+          <input type="radio" name="slider2" id="item-2-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-2-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-2-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-2-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Mariage</h2>
+          <p>Pour un amour éternel...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <img src="" alt="Photo portrait" title="Portrait" />
-            </a>
-            <div>
-              <h2>Portrait</h2>
-              <p>Pour un shooting qui vous ressemble...</p>
-            </div>
-          </article>
+      <article class="project">
+        <div class="carousel-container" id="carousel-3">
+          <input type="radio" name="slider3" id="item-3-1" />
+          <input type="radio" name="slider3" id="item-3-2" />
+          <input type="radio" name="slider3" id="item-3-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-3-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-3-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-3-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Portrait</h2>
+          <p>Pour un shooting qui vous ressemble...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <img src="" alt="Photo bébé" title="Naissance" />
-            </a>
-            <div>
-              <h2>Naissance</h2>
-              <p>Pour votre enfant...</p>
-            </div>
-          </article>
+      <article class="project">
+        <div class="carousel-container" id="carousel-4">
+          <input type="radio" name="slider4" id="item-4-1" />
+          <input type="radio" name="slider4" id="item-4-2" />
+          <input type="radio" name="slider4" id="item-4-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-4-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-4-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-4-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Naissance</h2>
+          <p>Pour votre enfant...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <img src="" alt="Photo grossesse" title="Grossesse" />
-            </a>
-            <div>
-              <h2>Grossesse</h2>
-              <p>Pour immortaliser votre beauté...</p>
-            </div>
-          </article>
+      <article class="project">
+        <div class="carousel-container" id="carousel-5">
+          <input type="radio" name="slider5" id="item-5-1" />
+          <input type="radio" name="slider5" id="item-5-2" />
+          <input type="radio" name="slider5" id="item-5-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-5-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-5-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-5-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Grossesse</h2>
+          <p>Pour immortaliser votre beauté...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <div class="imageCarousel carousel">
-                <img
-                  src=""
-                  class="carousel-image"
-                  alt="Photo animalière"
-                  title="Animaux"
-                />
-              </div>
-            </a>
-            <button id="prevButton">Précédent</button>
-            <button id="nextButton">Suivant</button>
-            <div>
-              <h2>Animaux</h2>
-              <p>Pour nos 30 millions d'amis...</p>
-            </div>
-          </article>
+      <article class="project">
+        <div class="carousel-container" id="carousel-6">
+          <input type="radio" name="slider6" id="item-6-1" />
+          <input type="radio" name="slider6" id="item-6-2" />
+          <input type="radio" name="slider6" id="item-6-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-6-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-6-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-6-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Animaux</h2>
+          <p>Pour nos 30 millions d'amis...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <img src="" alt="Photo d'identité" title="Identité" />
-            </a>
-            <div>
-              <h2>Photo d'Identité</h2>
-              <p>Pour des photos qui vous ressemblent...</p>
-            </div>
-          </article>
+      <article class="project">
+        <div class="carousel-container" id="carousel-7">
+          <input type="radio" name="slider7" id="item-7-1" />
+          <input type="radio" name="slider7" id="item-7-2" />
+          <input type="radio" name="slider7" id="item-7-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-7-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-7-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-7-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>Photo d'Identité</h2>
+          <p>Pour des photos qui vous ressemblent...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
 
-          <article class="project">
-            <a
-              href="/contact"
-              target="_self"
-              rel="noreferrer"
-              class="project-img"
-            >
-              <img src="" alt="PhotoBooth" title="PhotoBooth" />
-            </a>
-            <div>
-              <h2>PhotoBooth</h2>
-              <p>Pour vôtre mariage ou anniversaire...</p>
-            </div>
-          </article>
-        </section>
-      </div>
+      <article class="project">
+        <div class="carousel-container" id="carousel-8">
+          <input type="radio" name="slider8" id="item-8-1" />
+          <input type="radio" name="slider8" id="item-8-2" />
+          <input type="radio" name="slider8" id="item-8-3" />
+          <div class="carousel-pictures">
+            <label class="carousel-pic" for="item-8-1">
+              <img
+                src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=882&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-8-2">
+              <img
+                src="https://images.unsplash.com/photo-1559386484-97dfc0e15539?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80"
+                alt="picture"
+              />
+            </label>
+            <label class="carousel-pic" for="item-8-3">
+              <img
+                src="https://images.unsplash.com/photo-1533461502717-83546f485d24?ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60"
+                alt="picture"
+              />
+            </label>
+          </div>
+        </div>
+        <div>
+          <h2>PhotoBooth</h2>
+          <p>Pour vôtre mariage ou anniversaire...</p>
+          <a href="/password-check" target="_self" rel="noreferrer">
+            <button class="link-button">Nous contacter</button>
+          </a>
+        </div>
+      </article>
     </section>
   </body>
 </html>
