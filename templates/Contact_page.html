@@ -14,31 +14,67 @@
     />
     <title>Photo VERNHET</title>
   </head>
+
   <body>
-    <div class="navbar">
-      <a href="/" target="_self">Accueil</a>
-      <a href="/school" target="_self">Scolaires</a>
+    <div id="card">
+      <div id="navbar">
+        <a href="/" target="_self">Accueil</a>
+        <a href="/school" target="_self">Scolaires</a>
+      </div>
+      <h1>Bienvenue sur nôtre page de contact !</h1>
+      <p class="text">Pour nous contacter tout ce passe ici !</p>
+      <form id="form" action="votre_script_de_traitement" method="post">
+        <label for="name">Nom :</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email :</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="message">Message :</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Envoyer</button>
+        <p id="confirmationMessage" style="display: none">
+          Merci pour votre message ! Nous vous contacterons bientôt.
+        </p>
+      </form>
     </div>
-    <h1>Bienvenue sur nôtre page de contact !</h1>
-    <p>Pour nous contacter tout ce passe ici !</p>
-    <form id="form" action="votre_script_de_traitement" method="post">
-      <label for="name">Nom :</label>
-      <input type="text" id="name" name="name" required />
 
-      <label for="email">Email :</label>
-      <input type="email" id="email" name="email" required />
-
-      <label for="message">Message :</label>
-      <textarea id="message" name="message" required></textarea>
-
-      <button type="submit">Envoyer</button>
-      <p id="confirmationMessage" style="display: none">
-        Merci pour votre message ! Nous vous contacterons bientôt.
-      </p>
-    </form>
+    <div id="maps">
+      <h2>Nous trouver :</h2>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2852.9970799235402!2d2.0346591767311604!3d44.35111117107766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12ada71ad273e48d%3A0x41f8f0c2fc5aa756!2sPHOTO%20VERNHET!5e0!3m2!1sfr!2sfr!4v1709130402193!5m2!1sfr!2sfr"
+        width="600"
+        height="450"
+        style="border: 0"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+    <div id="infos-container">
+      <div class="infos">
+        <h2>Horaires d'ouverture :</h2>
+        <p>Lundi : Fermé</p>
+        <p>Mardi : 9h - 19h</p>
+        <p>Mercredi : 9h - 19h</p>
+        <p>Jeudi : 9h - 19h</p>
+        <p>Vendredi : 9h - 19h</p>
+        <p>Samedi : 9h - 19h</p>
+        <p>Dimanche : Fermé</p>
+      </div>
+      <div class="infos">
+        <h2>Nos coordonnées :</h2>
+        <p>Photo VERNHET</p>
+        <p>Adresse : 1 rue de la photo</p>
+        <p>Téléphone : 01 02 03 04 05</p>
+        <p>Email :</p>
+      </div>
+    </div>
   </body>
+
   <footer>
-    <p>Nos réseaux sociaux !</p>
+    <p class="text">Nos réseaux sociaux :</p>
     <div id="social">
       <a
         href="https://www.facebook.com/p/PHOTO-VERNHET-100063586840534/"
