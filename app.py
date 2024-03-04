@@ -11,6 +11,7 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, Optional
 from werkzeug.security import generate_password_hash, check_password_hash
 from webdav3.client import Client
+from synology_api.filestation import FileStation
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -62,6 +63,18 @@ class ProfilForm(FlaskForm):
     confirm_password = PasswordField('Confirmer le mot de passe', validators=[EqualTo('password')])
     submit = SubmitField('Mettre à jour')
 
+class UserAlbum(db.Model):
+    __tablename__ = 'user_albums'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    album_name = db.Column(db.String(255), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('albums', lazy=True))
+
+def user_has_access_to_album(user_id, album_name):
+    access = UserAlbum.query.filter_by(user_id=user_id, album_name=album_name).first()
+    return access is not None
+
 @login_manager.user_loader
 def load_user(user_id):
     user = User.query.get(int(user_id))
@@ -75,7 +88,7 @@ def home():
 
 @app.route('/test')
 def test():
-    return render_template('testCarousel.html')
+    return render_template('scrollTest.html')
 
 @app.route('/contact')
 def contact():
@@ -102,59 +115,6 @@ def login():
             flash('Nom d\'utilisateur ou mot de passe incorrect.', 'error')
     return render_template('Login.html', form=form)
 
-def get_folders():
-    url = os.getenv('SYNOLOGY_URL')
-    username = os.getenv('SYNOLOGY_USERNAME')
-    password = os.getenv('SYNOLOGY_PASSWORD')
-
-    options = {
-        'webdav_hostname': url,
-        'webdav_login': username,
-        'webdav_password': password
-    }
-    client = Client(options)
-
-    remote_path = '/photo'
-    folders = client.list(remote_path)
-    return folders
-
-@app.route('/album')
-@login_required
-def album():
-    # Récupérer les albums depuis le serveur synology
-    folders = get_folders()
-    return render_template('albumSelection.html', folders=folders)
-
-@app.route('/view_album')
-@login_required
-def view_album():
-    folder_name = request.args.get('folder')
-    if not folder_name:
-        return "No folder specified", 400
-
-    client = Client({
-        'webdav_hostname': os.getenv('SYNOLOGY_URL'),
-        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
-        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
-    })
-
-    remote_path = f'/photo/{folder_name}'
-    images = client.list(remote_path)
-    image_urls = [url_for('get_image', folder=folder_name, image=image) for image in images]
-    return render_template('albumView.html', images=image_urls)
-
-@app.route('/get_image/<folder>/<image>')
-def get_image(folder, image):
-    client = Client({
-        'webdav_hostname': os.getenv('SYNOLOGY_URL'),
-        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
-        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
-    })
-
-    remote_path = f'/photo/{folder}/{image}'
-    image_content = client.download_sync(remote_path=remote_path)
-    return send_file(io.BytesIO(image_content), mimetype='image/jpeg')
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -180,6 +140,61 @@ def register():
 
         return redirect(url_for('login'))  # Rediriger vers la page de connexion après l'inscription
     return render_template('Register.html')
+
+@app.route('/albums/<album_name>')
+@login_required
+def view_album(album_name):
+    # Vérifier si l'utilisateur courant a accès à l'album
+    if not user_has_access_to_album(current_user.id, album_name):
+        flash('Vous n\'êtes pas autorisé à voir cet album.', 'error')
+        return redirect(url_for('home'))
+    
+    # Configuration et connexion au serveur Synology
+    options = {
+        'webdav_hostname': os.getenv('SYNOLOGY_URL') + '/webdav',
+        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
+        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
+    }
+    client = Client(options)
+    
+    synology_folder = os.getenv('SYNOLOGY_FOLDER')
+    album_path = f"{synology_folder}/{album_name}"
+    
+    # Vérification de l'existence de l'album
+    if not client.check(album_path):
+        flash("L'album demandé n'existe pas.", 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        files = client.list(album_path)
+        image_urls = [url_for('serve_image', album_name=album_name, file_name=f) for f in files]
+    except Exception as e:
+        flash("Impossible d'accéder à l'album.", 'error')
+        return redirect(url_for('home'))
+    
+    # Affichage de l'album avec les URLs des images
+    return render_template('view_album.html', image_urls=image_urls, album_name=album_name)
+
+@app.route('/serve_image/<album_name>/<file_name>')
+def serve_image(album_name, file_name):
+    # Vérifier si l'utilisateur courant a accès à l'album
+    if not user_has_access_to_album(current_user.id, album_name):
+        return "Accès refusé", 403
+    
+    # Configuration et connexion au serveur Synology
+    options = {
+        'webdav_hostname': os.getenv('SYNOLOGY_URL') + '/webdav',
+        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
+        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
+    }
+    client = Client(options)
+    
+    synology_folder = os.getenv('SYNOLOGY_FOLDER')
+    file_path = f"{synology_folder}/{album_name}/{file_name}"
+    
+    # Récupérer l'image depuis le serveur Synology et la servir
+    response = client.download_sync(remote_path=file_path)
+    return Response(response.content, mimetype='image/jpeg')
 
 @app.route('/school')
 def school():
@@ -260,6 +275,38 @@ def admin():
 
     users = User.query.all() # Récupérer tous les utilisateurs de la base de données
     return render_template('userList.html', users=users)
+
+@app.route('/add_album_access', methods=['POST'])
+@login_required
+@admin_required
+def add_album_access():
+    user_id = request.form.get('user_id')
+    album_name = request.form.get('album_name').strip()
+    
+    if UserAlbum.query.filter_by(user_id=user_id, album_name=album_name).first():
+        flash('L\'accès à cet album existe déjà pour cet utilisateur.', 'warning')
+    else:
+        new_access = UserAlbum(user_id=user_id, album_name=album_name)
+        db.session.add(new_access)
+        db.session.commit()
+        flash('Accès à l\'album accordé avec succès.', 'success')
+    return redirect(url_for('admin'))
+
+@app.route('/remove_album_access', methods=['POST'])
+@login_required
+@admin_required
+def remove_album_access():
+    user_id = request.form.get('user_id')
+    album_name = request.form.get('album_name').strip()
+    
+    access = UserAlbum.query.filter_by(user_id=user_id, album_name=album_name).first()
+    if access:
+        db.session.delete(access)
+        db.session.commit()
+        flash('Accès à l\'album retiré avec succès.', 'success')
+    else:
+        flash('Accès spécifié introuvable.', 'error')
+    return redirect(url_for('admin'))
 
 @app.route('/password-check', methods=['GET', 'POST'])
 def password_check():
