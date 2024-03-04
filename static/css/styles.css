@@ -5,7 +5,6 @@
 *::after {
     font-family: 'Poppins', sans-serif;
     padding: 0;
-    box-sizing: border-box;
 }
 
 html {
@@ -179,6 +178,7 @@ footer {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     place-items: center;
     gap: 5rem;
+    margin: 1.25rem 0;
 }
 
 .project h2 {
