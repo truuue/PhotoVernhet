@@ -16,7 +16,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 50px;
+    padding: 1.25rem 3.125rem;
     background-color: #f2f2f2;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
@@ -28,9 +28,13 @@ html {
     letter-spacing: 1px;
 }
 
+.navbar a:hover {
+    color: gray;
+}
+
 h1 {
     text-align: center;
-    margin: 50px 0 50px 0;
+    margin: 3.125rem 0 3.125rem 0;
     font-size: 3rem;
     font-weight: 500;
     letter-spacing: 5px;
@@ -50,7 +54,39 @@ form {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px 0;
+    margin: 1.25rem 0;
+}
+
+.form-container input {
+    margin: 1rem;
+    padding: 1px 2px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    color: black;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.form-container button {
+    margin: 1rem;
+    padding: 1px 2px;
+    border: none;
+    border-radius: 5px;
+    background-color: gray;
+    color: white;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+hr {
+    width: 50%;
+    margin: 1.25rem auto;
+    border: 1px solid #f2f2f2;
+    border-radius: 1rem;
+    display: block;
 }
 
 .role-display {
@@ -75,7 +111,7 @@ form {
 }
 
 .update-button {
-    margin: 20px 0;
+    margin: 1.25rem 0;
     padding: 2px 5px;
     border: none;
     border-radius: 5px;
@@ -89,10 +125,10 @@ form {
 
 h2 {
     text-align: center;
-    margin: 75px 0 50px 0;
+    margin: 10rem 0 3rem 0;
     font-size: 1.5rem;
     font-weight: 400;
-    letter-spacing: 5px;
+    letter-spacing: 0.313rem;
     color: black;
 }
 
@@ -113,7 +149,7 @@ li {
 @media (max-width: 650px) {
     h1 {
         text-align: center;
-        margin: 50px 0 50px 0;
+        margin: 3.125rem 0 3.125rem 0;
         font-size: 2.5rem;
         font-weight: 500;
         letter-spacing: 5px;

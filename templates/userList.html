@@ -39,7 +39,7 @@
         <input type="submit" value="Supprimer le compte" />
       </form>
     </div>
-    <div>
+    <div class="form-container">
       <form action="{{ url_for('add_album_access') }}" method="post">
         <input type="hidden" name="user_id" value="{{ user.id }}" />
         <input type="text" name="album_name" placeholder="Nom de l'album" />
@@ -51,6 +51,7 @@
         <button type="submit">Retirer l'accès à l'album</button>
       </form>
     </div>
+    <hr />
     {% endfor %}
 
     <h2>Liste des utilisateurs</h2>
