@@ -15,12 +15,12 @@
     />
   </head>
   <body>
-    <div class="form-container">
+    <div id="form-container">
       <form action="{{ url_for('login') }}" method="post">
         <h2>Connexion</h2>
         {{ form.hidden_tag() }} {{ form.username.label }} {{ form.username() }}
         {{ form.password.label }} {{ form.password() }}
-        <input class="login" type="submit" value="Login" />
+        <input class="login" type="submit" value="Connexion" />
       </form>
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
