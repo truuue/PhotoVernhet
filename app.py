@@ -1,4 +1,6 @@
 import os
+import requests
+import json
 from dotenv import load_dotenv
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session, render_template_string
@@ -10,7 +12,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, Optional
 from werkzeug.security import generate_password_hash, check_password_hash
-from webdav3.client import Client
 from synology_api.filestation import FileStation
 
 # Charger les variables d'environnement
@@ -52,8 +53,8 @@ user_manager = UserManager(app, db, User)
 
 # Formulaire Flask-WTF pour la connexion
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[InputRequired()])
-    password = PasswordField('Password', validators=[InputRequired()])
+    username = StringField('Nom d\'utilisateur :', validators=[InputRequired()])
+    password = PasswordField('Mot de passe :', validators=[InputRequired()])
 
 # Formulaire Flask-WTF pour la mise à jour du profil
 class ProfilForm(FlaskForm):
@@ -85,10 +86,6 @@ def load_user(user_id):
 @app.route('/')
 def home():
     return render_template('index.html')
-
-@app.route('/test')
-def test():
-    return render_template('scrollTest.html')
 
 @app.route('/contact')
 def contact():
@@ -141,60 +138,66 @@ def register():
         return redirect(url_for('login'))  # Rediriger vers la page de connexion après l'inscription
     return render_template('Register.html')
 
+@app.route('/albums')
+@login_required
+def albums():
+    # Récupérer la liste des albums auxquels l'utilisateur actuel a accès
+    user_albums = UserAlbum.query.filter_by(user_id=current_user.id).all()
+
+    # Optionnellement, si vous voulez récupérer des informations supplémentaires sur les albums,
+    # par exemple, à partir d'un stockage externe ou d'une autre table, vous pouvez le faire ici
+
+    return render_template('albumSelection.html', albums=user_albums)
+
 @app.route('/albums/<album_name>')
 @login_required
 def view_album(album_name):
-    # Vérifier si l'utilisateur courant a accès à l'album
     if not user_has_access_to_album(current_user.id, album_name):
-        flash('Vous n\'êtes pas autorisé à voir cet album.', 'error')
+        flash("Vous n'êtes pas autorisé à voir cet album.", 'error')
         return redirect(url_for('home'))
     
-    # Configuration et connexion au serveur Synology
-    options = {
-        'webdav_hostname': os.getenv('SYNOLOGY_URL') + '/webdav',
-        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
-        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
-    }
-    client = Client(options)
-    
-    synology_folder = os.getenv('SYNOLOGY_FOLDER')
-    album_path = f"{synology_folder}/{album_name}"
-    
-    # Vérification de l'existence de l'album
-    if not client.check(album_path):
-        flash("L'album demandé n'existe pas.", 'error')
-        return redirect(url_for('home'))
-    
+    thumbnails_urls = []
     try:
-        files = client.list(album_path)
-        image_urls = [url_for('serve_image', album_name=album_name, file_name=f) for f in files]
+        synology_folder = os.getenv('SYNOLOGY_FOLDER') + '/' + album_name
+        files = []
+        
+        for file in files:
+            file_name = file['name']
+            thumb_params = {
+                'api': 'SYNO.FileStation.Thumb',
+                'version': '1',
+                'method': 'get',
+                'path': os.path.join(synology_folder, file_name),
+                'size': 'small',  # Choisissez la taille de la vignette selon les options de l'API
+                '_sid': sid
+            }
+            thumb_response = requests.get(f"{SYNOLOGY_URL}entry.cgi", params=thumb_params, verify=False)  # `verify=False` si vous avez des problèmes de certificat SSL
+            
+            if thumb_response.status_code == 200:
+                # Supposant que l'API renvoie directement l'image de la vignette en réponse
+                # Sauvegarder ou transmettre la vignette comme nécessaire
+                # Cette partie dépend de comment vous voulez gérer les vignettes
+                thumb_url = "/path/to/saved/thumbnail"  # Mettez à jour selon votre logique de sauvegarde
+                thumbnails_urls.append(thumb_url)
     except Exception as e:
-        flash("Impossible d'accéder à l'album.", 'error')
+        flash("Impossible d'accéder à l'album: " + str(e), 'error')
         return redirect(url_for('home'))
     
-    # Affichage de l'album avec les URLs des images
-    return render_template('view_album.html', image_urls=image_urls, album_name=album_name)
+    return render_template('albumView.html', thumbnails=thumbnails_urls)
 
-@app.route('/serve_image/<album_name>/<file_name>')
-def serve_image(album_name, file_name):
-    # Vérifier si l'utilisateur courant a accès à l'album
+@app.route('/serve_thumb/<album_name>/<file_name>')
+def serve_thumb(album_name, file_name):
     if not user_has_access_to_album(current_user.id, album_name):
         return "Accès refusé", 403
     
-    # Configuration et connexion au serveur Synology
-    options = {
-        'webdav_hostname': os.getenv('SYNOLOGY_URL') + '/webdav',
-        'webdav_login': os.getenv('SYNOLOGY_USERNAME'),
-        'webdav_password': os.getenv('SYNOLOGY_PASSWORD')
-    }
-    client = Client(options)
-    
-    synology_folder = os.getenv('SYNOLOGY_FOLDER')
-    file_path = f"{synology_folder}/{album_name}/{file_name}"
-    
-    # Récupérer l'image depuis le serveur Synology et la servir
-    response = client.download_sync(remote_path=file_path)
-    return Response(response.content, mimetype='image/jpeg')
+    try:
+        fs = FileStation(SYNOLOGY_URL, ACCOUNT, PASSWORD)
+        synology_folder = DIRECTORY_PATH + '/' + album_name
+        thumb_response = fs.get_thumb(synology_folder, file_name, size='small')  # Ajustez selon votre implémentation
+        
+        return Response(thumb_response, mimetype='image/jpeg')  # Assurez-vous que le type MIME est correct
+    except Exception as e:
+        return "Erreur lors du chargement de la vignette: " + str(e), 500
 
 @app.route('/school')
 def school():
