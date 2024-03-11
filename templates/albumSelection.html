@@ -1,30 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/albumSelection.css') }}"
     />
-    <title>Album</title>
+    <title>Liste des Albums</title>
   </head>
   <body>
     {% if current_user.is_authenticated %}
-    <h1>Selection d'album</h1>
-    <p>
-      Bienvenue sur notre page de sélection d'album. Veuillez entrer le mot de
-      passe de l'album que vous souhaitez voir :
-    </p>
-    <form method="POST" action="/album">
-      <input type="text" name="access_code" placeholder="Mot de passe" />
-      <button type="submit">Vérifier</button>
-    </form>
-    <div>
-      {% for folder in folders %}
-      <a href="/view_album?folder={{ folder }}">{{ folder }}</a>
+    <h1>Albums</h1>
+    <p>Choisissez un album pour voir les images</p>
+    <ul>
+      {% for album in albums %}
+      <li>
+        <a href="{{ url_for('view_album', album_name=album.album_name) }}"
+          >{{ album.album_name }}</a
+        >
+      </li>
       {% endfor %}
-    </div>
+    </ul>
     {% else %}
     <div class="request">
       <p class="error-message">Vous devez être connecté pour voir cette page</p>
