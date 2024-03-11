@@ -14,8 +14,8 @@
     ></script>
   </head>
   <body>
-    <h1>Images de l'Album</h1>
-    <div>
+    <h1>Images de l'Album : {{ album_name }}</h1>
+    <div id="img-container">
       <!-- Boucle sur les URLs des vignettes -->
       {% for thumb_url in thumbnails %}
       <img
