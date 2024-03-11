@@ -1,6 +1,5 @@
 import os
 import requests
-import json
 from dotenv import load_dotenv
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session, render_template_string
@@ -24,6 +23,12 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['USER_ENABLE_EMAIL'] = False
 app.config['USER_EMAIL_SENDER_EMAIL'] = "photovernhet@gmail.com"
+
+# Configuration de l'accès Synology
+ACCOUNT = os.getenv('SYNOLOGY_ACCOUNT')
+PASSWORD = os.getenv('SYNOLOGY_PASSWORD')
+SYNOLOGY_URL = os.getenv('SYNOLOGY_URL')
+DIRECTORY_PATH = os.getenv('SYNOLOGY_DIRECTORY_PATH')
 
 # Initialisation de la base de données
 db = SQLAlchemy(app)
