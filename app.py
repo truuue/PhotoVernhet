@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, flash, session, render_template_string
+from flask import Flask, render_template, request, redirect, url_for, flash, session, render_template_string, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_user import login_required, UserManager, UserMixin
@@ -11,7 +11,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, Optional
 from werkzeug.security import generate_password_hash, check_password_hash
-from synology_api.filestation import FileStation
 
 # Charger les variables d'environnement
 load_dotenv()
@@ -25,10 +24,10 @@ app.config['USER_ENABLE_EMAIL'] = False
 app.config['USER_EMAIL_SENDER_EMAIL'] = "photovernhet@gmail.com"
 
 # Configuration de l'accès Synology
-ACCOUNT = os.getenv('SYNOLOGY_ACCOUNT')
-PASSWORD = os.getenv('SYNOLOGY_PASSWORD')
 SYNOLOGY_URL = os.getenv('SYNOLOGY_URL')
-DIRECTORY_PATH = os.getenv('SYNOLOGY_DIRECTORY_PATH')
+SYNOLOGY_ACCOUNT = os.getenv('SYNOLOGY_ACCOUNT')
+SYNOLOGY_PASSWORD = os.getenv('SYNOLOGY_PASSWORD')
+SYNOLOGY_FOLDER = os.getenv('SYNOLOGY_FOLDER')
 
 # Initialisation de la base de données
 db = SQLAlchemy(app)
@@ -154,6 +153,25 @@ def albums():
 
     return render_template('albumSelection.html', albums=user_albums)
 
+def get_synology_session():
+    try:
+        response = requests.get(f"{SYNOLOGY_URL}webapi/auth.cgi", params={
+            'api': 'SYNO.API.Auth',
+            'version': '3',
+            'method': 'login',
+            'account': SYNOLOGY_ACCOUNT,
+            'passwd': SYNOLOGY_PASSWORD,
+            'session': 'FileStation',
+            'format': 'sid'
+        })
+        response.raise_for_status()  # Cela va lever une exception pour les codes d'état HTTP 4xx ou 5xx
+        data = response.json()
+        if data['success']:
+            return data['data']['sid']
+    except Exception as e:
+        print(f"Erreur lors de l'authentification : {e}")
+    return None
+
 @app.route('/albums/<album_name>')
 @login_required
 def view_album(album_name):
@@ -162,30 +180,35 @@ def view_album(album_name):
         return redirect(url_for('home'))
     
     thumbnails_urls = []
+    sid = get_synology_session()
+    if sid is None:
+        flash("Impossible d'accéder à l'album : Problème d'authentification", 'error')
+        return redirect(url_for('home'))
+
+    synology_folder = SYNOLOGY_FOLDER + '/' + album_name
     try:
-        synology_folder = os.getenv('SYNOLOGY_FOLDER') + '/' + album_name
-        files = []
-        
-        for file in files:
-            file_name = file['name']
-            thumb_params = {
-                'api': 'SYNO.FileStation.Thumb',
-                'version': '1',
-                'method': 'get',
-                'path': os.path.join(synology_folder, file_name),
-                'size': 'small',  # Choisissez la taille de la vignette selon les options de l'API
-                '_sid': sid
-            }
-            thumb_response = requests.get(f"{SYNOLOGY_URL}entry.cgi", params=thumb_params, verify=False)  # `verify=False` si vous avez des problèmes de certificat SSL
-            
-            if thumb_response.status_code == 200:
-                # Supposant que l'API renvoie directement l'image de la vignette en réponse
-                # Sauvegarder ou transmettre la vignette comme nécessaire
-                # Cette partie dépend de comment vous voulez gérer les vignettes
-                thumb_url = "/path/to/saved/thumbnail"  # Mettez à jour selon votre logique de sauvegarde
-                thumbnails_urls.append(thumb_url)
+        response = requests.get(f"{SYNOLOGY_URL}webapi/entry.cgi", params={
+            'api': 'SYNO.FileStation.List',
+            'version': '2',
+            'method': 'list',
+            'folder_path': synology_folder,
+            '_sid': sid
+        })
+        response.raise_for_status()
+        data = response.json()
+        if data['success']:
+            # Supposant que vous devez faire une autre requête pour obtenir chaque vignette,
+            # mais cela dépend de votre API Synology et de la façon dont elle gère les vignettes.
+            # La logique suivante doit être ajustée en fonction de votre cas d'utilisation spécifique.
+            for file in data['data']['files']:
+                file_name = file['name']
+                # Supposons que vous avez un moyen de générer des URLs de vignettes ou de les récupérer
+                thumbnails_urls.append(f"/some/path/to/thumbnails/{file_name}")
+        else:
+            flash("Impossible de lister les fichiers dans l'album", 'error')
+            return redirect(url_for('home'))
     except Exception as e:
-        flash("Impossible d'accéder à l'album: " + str(e), 'error')
+        flash(f"Impossible d'accéder à l'album : {e}", 'error')
         return redirect(url_for('home'))
     
     return render_template('albumView.html', thumbnails=thumbnails_urls)
@@ -195,14 +218,26 @@ def serve_thumb(album_name, file_name):
     if not user_has_access_to_album(current_user.id, album_name):
         return "Accès refusé", 403
     
+    sid = get_synology_session()
+    if sid is None:
+        return "Erreur d'authentification", 500
+
+    synology_folder = SYNOLOGY_FOLDER + '/' + album_name
     try:
-        fs = FileStation(SYNOLOGY_URL, ACCOUNT, PASSWORD)
-        synology_folder = DIRECTORY_PATH + '/' + album_name
-        thumb_response = fs.get_thumb(synology_folder, file_name, size='small')  # Ajustez selon votre implémentation
-        
-        return Response(thumb_response, mimetype='image/jpeg')  # Assurez-vous que le type MIME est correct
+        # Cette requête dépend entièrement de la façon dont votre API Synology gère les vignettes.
+        # Vous aurez besoin d'ajuster les paramètres et la méthode en fonction de votre cas d'utilisation spécifique.
+        thumb_response = requests.get(f"{SYNOLOGY_URL}webapi/path/to/thumbnail/api", params={
+            'api': 'SYNO.FileStation.Thumb',
+            'version': '1',
+            'method': 'get',
+            'path': f"{synology_folder}/{file_name}",
+            'size': 'small',
+            '_sid': sid
+        })
+        thumb_response.raise_for_status()
+        return Response(thumb_response.content, mimetype='image/jpeg')
     except Exception as e:
-        return "Erreur lors du chargement de la vignette: " + str(e), 500
+        return f"Erreur lors du chargement de la vignette : {e}", 500
 
 @app.route('/school')
 def school():
