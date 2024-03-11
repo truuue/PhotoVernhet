@@ -4,13 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vue de l'Album</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/albumView.css') }}"
+    />
+    <script
+      src="{{ url_for('static', filename='js/albumView.js') }}"
+      defer
+    ></script>
   </head>
   <body>
     <h1>Images de l'Album</h1>
     <div>
-      {% for image_url in images %}
-      <img src="{{ image_url }}" alt="Image de l'album" />
+      <!-- Boucle sur les URLs des vignettes -->
+      {% for thumb_url in thumbnails %}
+      <img
+        class="thumbnail"
+        src="{{ thumb_url }}"
+        alt="Vignette"
+        onclick="showImage(this.src)"
+      />
       {% endfor %}
+    </div>
+
+    <!-- Modal ou Popup pour l'affichage de l'image en taille réelle -->
+    <div id="modal" style="display: none">
+      <img
+        id="fullImage"
+        src=""
+        alt="Image en taille réelle"
+        style="max-width: 100%; max-height: 100vh"
+      />
+      <button onclick="closeImage()">Fermer</button>
     </div>
   </body>
 </html>
