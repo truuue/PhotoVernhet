@@ -197,13 +197,10 @@ def view_album(album_name):
         response.raise_for_status()
         data = response.json()
         if data['success']:
-            # Supposant que vous devez faire une autre requête pour obtenir chaque vignette,
-            # mais cela dépend de votre API Synology et de la façon dont elle gère les vignettes.
-            # La logique suivante doit être ajustée en fonction de votre cas d'utilisation spécifique.
             for file in data['data']['files']:
                 file_name = file['name']
-                # Supposons que vous avez un moyen de générer des URLs de vignettes ou de les récupérer
-                thumbnails_urls.append(f"/some/path/to/thumbnails/{file_name}")
+                # Générez des URLs qui pointent vers la nouvelle route Flask `/serve_thumb`
+                thumbnails_urls.append(url_for('serve_thumb', album_name=album_name, file_name=file_name))
         else:
             flash("Impossible de lister les fichiers dans l'album", 'error')
             return redirect(url_for('home'))
@@ -222,18 +219,22 @@ def serve_thumb(album_name, file_name):
     if sid is None:
         return "Erreur d'authentification", 500
 
+    # Construisez le chemin complet du fichier sur le NAS
     synology_folder = SYNOLOGY_FOLDER + '/' + album_name
+    file_path = f"{synology_folder}/{file_name}"
+
     try:
-        # Cette requête dépend entièrement de la façon dont votre API Synology gère les vignettes.
-        # Vous aurez besoin d'ajuster les paramètres et la méthode en fonction de votre cas d'utilisation spécifique.
-        thumb_response = requests.get(f"{SYNOLOGY_URL}webapi/path/to/thumbnail/api", params={
+        # Remplacez `path/to/thumbnail/api` par le chemin d'accès correct de l'API pour obtenir les vignettes
+        thumb_url = f"{SYNOLOGY_URL}webapi/entry.cgi"
+        params = {
             'api': 'SYNO.FileStation.Thumb',
             'version': '1',
             'method': 'get',
-            'path': f"{synology_folder}/{file_name}",
+            'path': file_path,
             'size': 'small',
             '_sid': sid
-        })
+        }
+        thumb_response = requests.get(thumb_url, params=params, stream=True)
         thumb_response.raise_for_status()
         return Response(thumb_response.content, mimetype='image/jpeg')
     except Exception as e:
