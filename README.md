@@ -2,7 +2,7 @@
 
 ## Tech Stack
 
-**Client:** HTML, CSS
+**Client:** HTML, CSS, JS, Jinja2
 
 **Server:** Python, Flask
 
