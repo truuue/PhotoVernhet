@@ -208,7 +208,7 @@ def view_album(album_name):
         flash(f"Impossible d'accéder à l'album : {e}", 'error')
         return redirect(url_for('home'))
     
-    return render_template('albumView.html', thumbnails=thumbnails_urls)
+    return render_template('albumView.html', thumbnails=thumbnails_urls, album_name=album_name)
 
 @app.route('/serve_thumb/<album_name>/<file_name>')
 def serve_thumb(album_name, file_name):
