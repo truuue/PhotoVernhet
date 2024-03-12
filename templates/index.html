@@ -30,14 +30,13 @@
           {% if not current_user.is_authenticated %}
           <li><a href="/register">Enregistrement</a></li>
           <li><a href="/login">Connexion</a></li>
-          {% endif %} {% if current_user.is_authenticated %}
+          {% else %}
           <li><a href="/profil">Profil</a></li>
           <li><a href="/albums">Albums</a></li>
           <li><a href="/logout">Déconnexion</a></li>
-          {% endif %} {% if current_user.is_authenticated and
-          current_user.is_admin %}
+          {% if current_user.role == 'admin' %}
           <li><a href="/admin">Page administrateur</a></li>
-          {% endif %}
+          {% endif %} {% endif %}
         </ul>
         <div class="nav-toogler">
           <span></span>
@@ -71,22 +70,13 @@
           <input type="radio" name="slider1" id="item-1-3" />
           <div class="carousel-pictures">
             <label class="carousel-pic" for="item-1-1">
-              <img
-                src="/static/images/Scolaire/Sud_2008_C.jpg"
-                alt="picture"
-              />
+              <img src="/static/images/Scolaire/Sud_2008_C.jpg" alt="picture" />
             </label>
             <label class="carousel-pic" for="item-1-2">
-              <img
-                src="/static/images/Scolaire/Sud_2008_M.jpg"
-                alt="picture"
-              />
+              <img src="/static/images/Scolaire/Sud_2008_M.jpg" alt="picture" />
             </label>
             <label class="carousel-pic" for="item-1-3">
-              <img
-                src="/static/images/Scolaire/Portrait_N.jpg"
-                alt="picture"
-              />
+              <img src="/static/images/Scolaire/Portrait_N.jpg" alt="picture" />
             </label>
           </div>
         </div>
@@ -112,10 +102,7 @@
               />
             </label>
             <label class="carousel-pic" for="item-2-2">
-              <img
-                src="/static/images/Mariage/DSC02017.jpg"
-                alt="picture"
-              />
+              <img src="/static/images/Mariage/DSC02017.jpg" alt="picture" />
             </label>
             <label class="carousel-pic" for="item-2-3">
               <img
