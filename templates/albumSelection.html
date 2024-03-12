@@ -16,17 +16,22 @@
   </head>
   <body>
     {% if current_user.is_authenticated %}
+    <div class="navbar">
+      <a href="/" target="_self">Accueil</a>
+    </div>
     <h1>Albums</h1>
-    <p>Choisissez un album pour voir les images</p>
-    <ul>
-      {% for album in albums %}
-      <li>
-        <a href="{{ url_for('view_album', album_name=album.album_name) }}"
-          >{{ album.album_name }}</a
-        >
-      </li>
-      {% endfor %}
-    </ul>
+    <div id="album-container">
+      <p>Choisissez un album pour voir les images :</p>
+      <ul>
+        {% for album in albums %}
+        <li>
+          <a href="{{ url_for('view_album', album_name=album.album_name) }}"
+            >{{ album.album_name }}</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
     {% else %}
     <div class="request">
       <p class="error-message">Vous devez être connecté pour voir cette page</p>

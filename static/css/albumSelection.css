@@ -12,9 +12,62 @@ html {
     scroll-behavior: smooth;
 }
 
+.navbar {
+    top: 0;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3.125rem;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: gray;
+}
+
 body {
     min-height: 100vh;
-    background: linear-gradient(to bottom, white, rgb(235, 235, 235));
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+#album-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+#album-container p {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+#album-container a {
+    color: black;
+    font-size: 1.2rem;
+    margin: 0.5rem;
+}
+
+#album-container a:hover {
+    color: gray;
+    transition: color 0.3s;
 }
 
 .request {
@@ -32,25 +85,11 @@ p.error-message {
     text-decoration: underline;
 }
 
-li {
-    list-style: none;
-    margin: 1rem 0;
-}
-
-li a {
-    color: black;
-    font-size: 1.1rem;
-}
-
-li a:hover {
-    color: gray;
-}
-
 @media screen and (max-width: 600px){
     p.error-message {
         font-size: 1.2rem;
     }
-    li a {
+    #album-container a {
         font-size: 1rem;
     }
 }
