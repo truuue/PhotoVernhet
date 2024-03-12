@@ -32,6 +32,9 @@
         </div>
         <button type="submit">S'inscrire</button>
       </form>
+      <p>
+        Déjà un compte ? <a href="{{ url_for('login') }}">Connectez-vous</a>
+      </p>
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
       <div class="error-messages">{{ message }}</div>

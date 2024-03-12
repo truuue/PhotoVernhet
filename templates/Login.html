@@ -22,6 +22,9 @@
         {{ form.password.label }} {{ form.password() }}
         <input class="login" type="submit" value="Connexion" />
       </form>
+      <p>
+        Pas de compte ? <a href="{{ url_for('register') }}">Inscrivez-vous</a>
+      </p>
       {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %}
       <div class="alert">{{ message }}</div>
