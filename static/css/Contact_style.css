@@ -16,22 +16,23 @@ a {
 }
 
 #navbar {
+    top: 0;
+    width: 100%;
     cursor: pointer;
-    position: relative;
     display: flex;
-    justify-content: left;
-    overflow: hidden;
-    padding: 20px 50px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3.125rem;
     background-color: #f2f2f2;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #navbar a {
-    margin: 0 10px;
     text-decoration: none;
     color: black;
     font-size: 1rem;
     letter-spacing: 1px;
+    transition: color 0.3s;
 }
 
 #navbar a:hover {
@@ -43,7 +44,6 @@ h1 {
     font-weight: 600;
     letter-spacing: 5px;
     color: black;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
     margin: 50px 0;
 }
@@ -58,31 +58,57 @@ p.text {
 }
 
 #form {
-    /* styles du formulaire */
     margin: 0 auto;
     width: 50%;
     padding: 50px;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f2f2f2;
 }
 
 #form label,
 #form input,
 #form textarea {
-    /* styles des champs */
     width: 100%;
     margin-bottom: 10px;
 }
 
+#form input[type="text"],
+#form input[type="email"],
+#form textarea {
+    margin: 10px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#form input[type="text"]:focus,
+#form input[type="email"]:focus,
+#form textarea:focus {
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#form textarea {
+    height: 150px;
+}
+
 #form button {
-    /* style du bouton */
-    background-color: gray;
-    color: white;
+    background-color: #f2f2f2;
+    color: black;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 #form button:hover {
-    background-color: lightgray;
+    background-color: #e6e6e6;
+}
+
+#card {
+    margin-bottom: 100px;
 }
 
 #maps {
@@ -101,6 +127,7 @@ p.text {
     height: 18.75rem;
     border: none;
     border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #infos-container {
@@ -116,6 +143,10 @@ p.text {
     flex-direction: column;
     align-items: center;
     margin: 5rem;
+    padding: 25px;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f2f2f2;
 }
 
 footer {
