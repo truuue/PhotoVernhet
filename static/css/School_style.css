@@ -12,22 +12,21 @@ html {
 }
 
 #navbar {
+    top: 0;
+    width: 100%;
     cursor: pointer;
-    position: relative;
-    display: flex;
-    justify-content: left;
-    overflow: hidden;
-    padding: 20px 50px;
+    padding: 1.25rem 3.125rem;
     background-color: #f2f2f2;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #navbar a {
-    margin: 0 10px;
+    margin-right: 1.25rem;
     text-decoration: none;
     color: black;
     font-size: 1rem;
     letter-spacing: 1px;
+    transition: color 0.3s;
 }
 
 #navbar a:hover {
@@ -39,7 +38,6 @@ h1 {
     font-weight: 600;
     letter-spacing: 5px;
     color: black;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
     text-align: center;
     margin: 50px 0;
 }
