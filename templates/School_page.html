@@ -21,16 +21,28 @@
       <a href="/contact" target="_self">Contact</a>
     </div>
     <h1>Choix de l'établissement</h1>
-    <p>Bienvenue, {{ current_user.username }}!</p>
-    <p>Choisissez votre école:</p>
-    <form action="{{ url_for('choose_school') }}" method="post">
-      <select name="school_name">
-        {% for school in schools %}
-        <option value="{{ school }}">{{ school }}</option>
+    <div id="form-container">
+      <p>Bienvenue, {{ current_user.username }} !</p>
+      <p>Choisissez votre école :</p>
+      <div id="card">
+        <form action="{{ url_for('choose_school') }}" method="post">
+          <select name="school_name">
+            {% for school in schools %}
+            <option value="{{ school }}">{{ school }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit">Choisir cette école</button>
+        </form>
+      </div>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div id="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
         {% endfor %}
-      </select>
-      <button type="submit">Choisir cette école</button>
-    </form>
+      </div>
+      {% endif %} {% endwith %}
+    </div>
     {% else %}
     <div id="background">
       <div id="login">
