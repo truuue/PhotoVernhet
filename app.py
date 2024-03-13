@@ -28,6 +28,7 @@ SYNOLOGY_URL = os.getenv('SYNOLOGY_URL')
 SYNOLOGY_ACCOUNT = os.getenv('SYNOLOGY_ACCOUNT')
 SYNOLOGY_PASSWORD = os.getenv('SYNOLOGY_PASSWORD')
 SYNOLOGY_FOLDER = os.getenv('SYNOLOGY_FOLDER')
+SYNOLOGY_SCHOOL_FOLDER = os.getenv('SYNOLOGY_SCHOOL_FOLDER')
 
 # Initialisation de la base de données
 db = SQLAlchemy(app)
@@ -159,10 +160,6 @@ def register():
 def albums():
     # Récupérer la liste des albums auxquels l'utilisateur actuel a accès
     user_albums = UserAlbum.query.filter_by(user_id=current_user.id).all()
-
-    # Optionnellement, si vous voulez récupérer des informations supplémentaires sur les albums,
-    # par exemple, à partir d'un stockage externe ou d'une autre table, vous pouvez le faire ici
-
     return render_template('albumSelection.html', albums=user_albums)
 
 def get_synology_session():
@@ -184,6 +181,7 @@ def get_synology_session():
         print(f"Erreur lors de l'authentification : {e}")
     return None
 
+# Route pour afficher les albums de l'utilisateur
 @app.route('/albums/<album_name>')
 @login_required
 def view_album(album_name):
@@ -231,12 +229,81 @@ def serve_thumb(album_name, file_name):
     if sid is None:
         return "Erreur d'authentification", 500
 
-    # Construisez le chemin complet du fichier sur le NAS
+    # Construire le chemin complet du fichier sur le NAS
     synology_folder = SYNOLOGY_FOLDER + '/' + album_name
     file_path = f"{synology_folder}/{file_name}"
 
     try:
-        # Remplacez `path/to/thumbnail/api` par le chemin d'accès correct de l'API pour obtenir les vignettes
+        thumb_url = f"{SYNOLOGY_URL}webapi/entry.cgi"
+        params = {
+            'api': 'SYNO.FileStation.Thumb',
+            'version': '1',
+            'method': 'get',
+            'path': file_path,
+            'size': 'small',
+            '_sid': sid
+        }
+        thumb_response = requests.get(thumb_url, params=params, stream=True)
+        thumb_response.raise_for_status()
+        return Response(thumb_response.content, mimetype='image/jpeg')
+    except Exception as e:
+        return f"Erreur lors du chargement de la vignette : {e}", 500
+
+# Route pour afficher les écoles
+@app.route('/school_albums/<school_name>/<album_name>')
+@login_required
+def school_album(school_name, album_name):
+    username = current_user.username
+    # Vérifier que le nom de l'album correspond au nom d'utilisateur pour autoriser l'accès
+    if album_name != username:
+        flash("Vous n'êtes pas autorisé à voir cet album.", 'error')
+        return redirect(url_for('home'))
+
+    thumbnails_urls = []
+    sid = get_synology_session()
+    if sid is None:
+        flash("Impossible d'accéder à l'album : Problème d'authentification", 'error')
+        return redirect(url_for('home'))
+
+    folder_path = f'{SYNOLOGY_SCHOOL_FOLDER}/{school_name}/{album_name}'
+    try:
+        response = requests.get(f"{SYNOLOGY_URL}webapi/entry.cgi", params={
+            'api': 'SYNO.FileStation.List',
+            'version': '2',
+            'method': 'list',
+            'folder_path': folder_path,
+            '_sid': sid
+        })
+        response.raise_for_status()
+        data = response.json()
+        if data['success']:
+            for file in data['data']['files']:
+                file_name = file['name']
+                thumbnails_urls.append(url_for('school_thumb', album_name=album_name, file_name=file_name, school_name=school_name))
+        else:
+            flash("Impossible de lister les fichiers dans l'album", 'error')
+            return redirect(url_for('home'))
+    except Exception as e:
+        flash(f"Impossible d'accéder à l'album : {e}", 'error')
+        return redirect(url_for('home'))
+    
+    return render_template('schoolView.html', thumbnails=thumbnails_urls, album_name=album_name)
+
+@app.route('/school_thumb/<school_name>/<album_name>/<file_name>')
+@login_required
+def school_thumb(school_name, album_name, file_name):
+    # Vérifier que le nom de l'album correspond au nom de l'utilisateur connecté
+    if album_name != current_user.username:
+        return "Accès refusé", 403
+
+    sid = get_synology_session()
+    if sid is None:
+        return "Erreur d'authentification", 500
+
+    # Construire le chemin complet du fichier sur le NAS, en incluant le nom de l'école et de l'album
+    file_path = f"{SYNOLOGY_SCHOOL_FOLDER}/{school_name}/{album_name}/{file_name}"
+
+    try:
         thumb_url = f"{SYNOLOGY_URL}webapi/entry.cgi"
         params = {
             'api': 'SYNO.FileStation.Thumb',
@@ -254,7 +321,65 @@ def serve_thumb(album_name, file_name):
 
 @app.route('/school')
 def school():
-    return render_template('School_page.html')
+    sid = get_synology_session()
+    if sid is None:
+        flash("Erreur d'authentification avec le serveur Synology.", 'error')
+        return redirect(url_for('home'))
+
+    try:
+        response = requests.get(f"{SYNOLOGY_URL}webapi/entry.cgi", params={
+            'api': 'SYNO.FileStation.List',
+            'version': '2',
+            'method': 'list',
+            'folder_path': SYNOLOGY_SCHOOL_FOLDER,
+            '_sid': sid
+        })
+        response.raise_for_status()
+        data = response.json()
+
+        if data['success']:
+            # Crée une liste des noms des dossiers (écoles)
+            schools = [folder['name'] for folder in data['data']['files']]
+        else:
+            flash("Impossible de lister les dossiers des écoles.", 'error')
+            return redirect(url_for('home'))
+    except Exception as e:
+        flash(f"Erreur lors de l'accès aux dossiers des écoles : {e}", 'error')
+        return redirect(url_for('home'))
+
+    return render_template('School_page.html', schools=schools)
+
+@app.route('/choose_school', methods=['POST'])
+@login_required
+def choose_school():
+    school_name = request.form.get('school_name')
+    username = current_user.username
+    sid = get_synology_session()
+
+    # Construire le chemin vers le dossier potentiel de l'utilisateur dans l'école sélectionnée
+    user_folder_path = f'{SYNOLOGY_SCHOOL_FOLDER}/{school_name}/{username}'
+
+    try:
+        # Vérifier si le dossier de l'utilisateur existe dans le dossier de l'école sélectionnée
+        response = requests.get(f"{SYNOLOGY_URL}webapi/entry.cgi", params={
+            'api': 'SYNO.FileStation.List',
+            'version': '2',
+            'method': 'list',
+            'folder_path': user_folder_path,
+            '_sid': sid
+        })
+        response.raise_for_status()
+        data = response.json()
+
+        if data['success'] and data['data']['files']:
+            # Si le dossier existe, rediriger vers la vue de cet album
+            return redirect(url_for('school_album', album_name=username, school_name=school_name))
+        else:
+            flash(f"Aucun album trouvé pour {username} dans l'établissement {school_name}.", 'error')
+    except Exception as e:
+        flash(f"Erreur lors de l'accès à l'album de l'utilisateur : {e}", 'error')
+
+    return redirect(url_for('school'))
 
 @app.route('/profil', methods=['GET', 'POST'])
 @login_required
