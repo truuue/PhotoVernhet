@@ -41,3 +41,92 @@ h1 {
     text-align: center;
     margin: 50px 0;
 }
+
+p {
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: black;
+    text-align: center;
+    margin: 20px 0;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-direction: row;
+    margin: 20px 0;
+}
+
+select {
+    padding: 0.625rem 1.25rem;
+    border: 1px solid #f2f2f2;
+    border-radius: 5px;
+    margin: 10px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+button {
+    background-color: #f2f2f2;
+    color: black;
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: gray;
+}
+
+/* If the user is not authentificated */
+
+#background {
+    height: 100vh;
+    width: 100%;
+    background-color: #f2f2f2;
+}
+
+#login {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+    padding: 2rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+}
+
+#login p {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+}
+
+#login a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    margin-top: 1.25rem;
+    transition: color 0.3s;
+}
+
+#login a:hover {
+    color: gray;
+}

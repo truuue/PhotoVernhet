@@ -15,10 +15,29 @@
     <title>Photo VERNHET</title>
   </head>
   <body>
+    {% if current_user.is_authenticated %}
     <div id="navbar">
       <a href="/" target="_self">Accueil</a>
       <a href="/contact" target="_self">Contact</a>
     </div>
     <h1>Choix de l'établissement</h1>
+    <p>Bienvenue, {{ current_user.username }}!</p>
+    <p>Choisissez votre école:</p>
+    <form action="{{ url_for('choose_school') }}" method="post">
+      <select name="school_name">
+        {% for school in schools %}
+        <option value="{{ school }}">{{ school }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit">Choisir cette école</button>
+    </form>
+    {% else %}
+    <div id="background">
+      <div id="login">
+        <p>Vous devez être connecté pour voir cette page :</p>
+        <a href="{{ url_for('login') }}">Connexion</a>
+      </div>
+    </div>
+    {% endif %}
   </body>
 </html>

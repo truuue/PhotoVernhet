@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Album : {{ album_name }}</title>
+    <title>Album Scolaire : {{ album_name }}</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/albumView.css') }}"
@@ -14,7 +14,7 @@
       type="image/png"
     />
     <script
-      src="{{ url_for('static', filename='js/albumView.js') }}"
+      src="{{ url_for('static', filename='js/schoolView.js') }}"
       defer
     ></script>
   </head>
@@ -22,7 +22,7 @@
     <div class="navbar">
       <a href="/" target="_self">Accueil</a>
     </div>
-    <h1>Images de l'Album : {{ album_name }}</h1>
+    <h1>Images de l'Album Scolaire : {{ album_name }}</h1>
     <div id="img-container">
       <!-- Boucle sur les URLs des vignettes -->
       {% for thumb_url in thumbnails %}
