@@ -124,9 +124,21 @@ def register():
         email = request.form['email']
         password = request.form['password']
 
+        # Vérifier si un utilisateur avec le même nom d'utilisateur ou email existe déjà
         existing_user = User.query.filter_by(username=username).first()
+        existing_user_by_email = User.query.filter_by(email=email).first()
+        # Initialiser une variable pour contrôler la redirection
+        redirect_needed = False
+
         if existing_user:
             flash('Le nom d\'utilisateur existe déjà.', 'error')
+            redirect_needed = True
+
+        if existing_user_by_email:
+            flash('L\'adresse email existe déjà.', 'error')
+            redirect_needed = True
+
+        if redirect_needed:
             return redirect(url_for('register'))
 
         # Hacher le mot de passe
@@ -274,6 +286,7 @@ def delete_user():
     user_id = current_user.id
     user_to_delete = db.session.get(User, user_id)
     if user_to_delete:
+        UserAlbum.query.filter_by(user_id=user_id).delete()
         db.session.delete(user_to_delete)
         db.session.commit()
 
@@ -284,13 +297,17 @@ def delete_user():
 @app.route('/delete_user_admin', methods=['POST'])
 def delete_user_admin():
     user_id = request.form.get('user_id')
-    user_to_delete = User.query.get(user_id)
-    if user_to_delete:
-        db.session.delete(user_to_delete)
-        db.session.commit()
-        flash('Le compte a été supprimé.', 'success')
+    if user_id is not None:
+        user_to_delete = db.session.get(User, user_id)
+        if user_to_delete:
+            UserAlbum.query.filter_by(user_id=user_id).delete()
+            db.session.delete(user_to_delete)
+            db.session.commit()
+            flash('Le compte a été supprimé.', 'success')
+        else:
+            flash('Utilisateur introuvable.', 'error')
     else:
-        flash('Utilisateur introuvable.', 'error')
+        flash("Aucun ID d'utilisateur fourni.", 'error')
 
     return redirect('/admin')
 
