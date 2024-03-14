@@ -23,6 +23,8 @@ Tanks to my peers for contributing
   <li><a href="https://github.com/Vaal34">Valentin Melia</a></li>
   <li><a href="https://github.com/fchavonet">Fabien Chavonet</a></li>
   <li><a href="https://github.com/SpStigma">Yoann Rivet</a></li>
+  <li><a href="https://github.com/Irrisam">Tristan Duchamp</a></li>
+  <li><a href="https://github.com/rioquentin">Quentin Rio</a></li>
 </ul>
 
 
