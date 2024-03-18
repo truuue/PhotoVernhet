@@ -100,11 +100,9 @@ def contact():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # Récupérer les informations de connexion
         username = form.username.data
         password = form.password.data
 
-        # Vérifier les informations de connexion (exemple simplifié)
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
@@ -142,7 +140,7 @@ def register():
         if redirect_needed:
             return redirect(url_for('register'))
 
-        # Hacher le mot de passe
+        # Hacher le mot de passe avant de le stocker dans la base de données
         hashed_password = generate_password_hash(password)
 
         # Créer une nouvelle instance de l'utilisateur avec le rôle user par défaut
@@ -152,6 +150,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
+        flash('Votre compte a été créé avec succès ! Merci de vous connecter.', 'success')
         return redirect(url_for('login'))  # Rediriger vers la page de connexion après l'inscription
     return render_template('Register.html')
 
