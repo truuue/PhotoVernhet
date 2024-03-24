@@ -21,22 +21,22 @@
         <a href="/" target="_self">Accueil</a>
         <a href="/school" target="_self">Scolaires</a>
       </div>
-      <h1>Bienvenue sur nôtre page de contact !</h1>
-      <p class="text">Pour nous contacter tout ce passe ici !</p>
-      <form id="form" action="votre_script_de_traitement" method="post">
-        <label for="name">Nom :</label>
-        <input type="text" id="name" name="name" required />
-
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" required />
-
-        <label for="message">Message :</label>
-        <textarea id="message" name="message" required></textarea>
-
-        <button type="submit">Envoyer</button>
-        <p id="confirmationMessage" style="display: none">
-          Merci pour votre message ! Nous vous contacterons bientôt.
-        </p>
+      <h1>Bienvenue sur notre page de contact !</h1>
+      <p class="text">Pour nous contacter, tout se passe ici !</p>
+      {% from "macros.html" import render_field %}
+      <form id="form" action="{{ url_for('contact') }}" method="post">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ render_field(form.name, class_="form-control", placeholder="Votre nom") }}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.email, class_="form-control", placeholder="Votre email") }}
+        </div>
+        <div class="form-group">
+          {{ render_field(form.message, class_="form-control",
+          placeholder="Votre message") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
       </form>
     </div>
 
@@ -66,9 +66,9 @@
       <div class="infos">
         <h2>Nos coordonnées :</h2>
         <p>Photo VERNHET</p>
-        <p>Adresse : 1 rue de la photo</p>
-        <p>Téléphone : 01 02 03 04 05</p>
-        <p>Email :</p>
+        <p>Adresse : 20 Rue de la République, <br>12200 Villefranche-de-Rouergue</p>
+        <p>Téléphone : 05 65 45 34 84</p>
+        <p>Email : photovernhet@gmail.com</p>
       </div>
     </div>
   </body>

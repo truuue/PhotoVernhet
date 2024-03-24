@@ -8,7 +8,7 @@ from flask_migrate import Migrate
 from flask_user import login_required, UserManager, UserMixin
 from flask_login import login_required, current_user, LoginManager, login_user, logout_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, TextAreaField
 from wtforms.validators import InputRequired, DataRequired, Email, Length, EqualTo, Optional
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -69,6 +69,22 @@ class ProfilForm(FlaskForm):
     confirm_password = PasswordField('Confirmer le mot de passe', validators=[EqualTo('password')])
     submit = SubmitField('Mettre à jour')
 
+class ContactMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    submitted_on = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+
+    def __repr__(self):
+        return f'<ContactMessage {self.name}>'
+
+class ContactForm(FlaskForm):
+    name = StringField('Nom', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    message = TextAreaField('Message', validators=[DataRequired()])
+    submit = SubmitField('Envoyer')
+
 class UserAlbum(db.Model):
     __tablename__ = 'user_albums'
     id = db.Column(db.Integer, primary_key=True)
@@ -92,9 +108,17 @@ def load_user(user_id):
 def home():
     return render_template('index.html')
 
-@app.route('/contact')
+@app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    return render_template('Contact_page.html')
+    form = ContactForm()
+    if form.validate_on_submit():
+        message = ContactMessage(name=form.name.data, email=form.email.data, message=form.message.data)
+        db.session.add(message)
+        db.session.commit()
+        flash('Votre message a été envoyé avec succès. Nous vous contacterons bientôt.', 'success')
+        return redirect(url_for('contact'))
+    return render_template('Contact_page.html', form=form)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -163,21 +187,27 @@ def albums():
 
 def get_synology_session():
     try:
+        # Send a GET request to the Synology API for authentication
         response = requests.get(f"{SYNOLOGY_URL}webapi/auth.cgi", params={
-            'api': 'SYNO.API.Auth',
-            'version': '3',
-            'method': 'login',
-            'account': SYNOLOGY_ACCOUNT,
-            'passwd': SYNOLOGY_PASSWORD,
-            'session': 'FileStation',
-            'format': 'sid'
+            'api': 'SYNO.API.Auth',  # Specify the API to use
+            'version': '3',  # Specify the version of the API
+            'method': 'login',  # Specify the method to use (login)
+            'account': SYNOLOGY_ACCOUNT,  # Provide the account name
+            'passwd': SYNOLOGY_PASSWORD,  # Provide the password
+            'session': 'FileStation',  # Specify the session to use
+            'format': 'sid'  # Specify the format of the response (session ID)
         })
-        response.raise_for_status()  # Cela va lever une exception pour les codes d'état HTTP 4xx ou 5xx
+        # Raise an exception if the HTTP status code is 4xx or 5xx
+        response.raise_for_status()
+        # Parse the JSON response
         data = response.json()
+        # If the authentication was successful, return the session ID
         if data['success']:
             return data['data']['sid']
     except Exception as e:
+        # Print any errors that occur during the authentication process
         print(f"Erreur lors de l'authentification : {e}")
+    # If the authentication was not successful, return None
     return None
 
 # Route pour afficher les albums de l'utilisateur
@@ -512,10 +542,6 @@ def password_check():
             <input type="submit" value="Vérifier">
         </form>
     ''')
-# Mettre en place une redirection automatique vers l'école du mot de passe désigné
-# du style : /password-check?redirect=school
-# motdepasse redigige vers saint joseph
-# motdepasse2 redirige vers la sup
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
